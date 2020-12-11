@@ -1,5 +1,0 @@
-obj\Debug\netcoreapp3.1/File.cs \
-obj\Debug\netcoreapp3.1/FileGrpc.cs: ../../../Proto/google/api/http.proto\
- C:/Users/hafiz.roslan.HARTALEGA/.nuget/packages/grpc.tools/2.33.1/build/native/include/google/protobuf/descriptor.proto\
- ../../../Proto/google/api/annotations.proto\
- ../../../Proto/file.proto

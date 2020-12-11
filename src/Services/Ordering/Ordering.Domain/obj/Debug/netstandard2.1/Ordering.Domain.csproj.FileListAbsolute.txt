@@ -1,9 +1,0 @@
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\bin\Debug\netstandard2.1\Ordering.Domain.deps.json
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\bin\Debug\netstandard2.1\Ordering.Domain.dll
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\bin\Debug\netstandard2.1\Ordering.Domain.pdb
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\obj\Debug\netstandard2.1\Ordering.Domain.csprojAssemblyReference.cache
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\obj\Debug\netstandard2.1\Ordering.Domain.AssemblyInfoInputs.cache
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\obj\Debug\netstandard2.1\Ordering.Domain.AssemblyInfo.cs
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\obj\Debug\netstandard2.1\Ordering.Domain.csproj.CoreCompileInputs.cache
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\obj\Debug\netstandard2.1\Ordering.Domain.dll
-C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Domain\obj\Debug\netstandard2.1\Ordering.Domain.pdb
