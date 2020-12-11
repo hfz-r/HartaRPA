@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "cfq7rtYSvEVYIWUhitVXeOZ+QJamDn0MDYx3bqLweFq2vesV8XQg8tUdK36lB6vbyREg/4ywL31Jr/WnSYhAWA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\Services\\Ordering\\Ordering.Domain\\Ordering.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\mediatr\\7.0.0\\mediatr.7.0.0.nupkg.sha512",
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\mediatr.extensions.microsoft.dependencyinjection\\7.0.0\\mediatr.extensions.microsoft.dependencyinjection.7.0.0.nupkg.sha512",
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.0.0\\microsoft.extensions.dependencyinjection.abstractions.2.0.0.nupkg.sha512",
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\system.reflection.typeextensions\\4.7.0\\system.reflection.typeextensions.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

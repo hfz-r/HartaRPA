@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+package harta.file;
+
+service FileService {
+  rpc Format(FormatRequest) returns (FormatResponse) {
+    option (google.api.http) = {
+      get : "file/format/{file_name}"
+    };
+  }
+}
+
+message FormatRequest {
+  string file_name = 1;
+  string file_type = 2;
+}
+
+message FormatResponse {
+  bool status = 1;
+  string message = 2;
+}

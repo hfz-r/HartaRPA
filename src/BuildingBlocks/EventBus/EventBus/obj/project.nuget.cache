@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "NiD9mGZbcT8LCecx+E+O/7sb8dNxeoziGIeRbZQBRw0iKqWMCy+mbY6rb0BfeAHyTcQYMEt7/IsjLtTF4uLFqQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

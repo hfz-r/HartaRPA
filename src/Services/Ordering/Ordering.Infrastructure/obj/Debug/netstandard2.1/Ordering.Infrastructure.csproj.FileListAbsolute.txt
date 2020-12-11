@@ -1,0 +1,12 @@
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\bin\Debug\netstandard2.1\Ordering.Infrastructure.deps.json
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\bin\Debug\netstandard2.1\Ordering.Infrastructure.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\bin\Debug\netstandard2.1\Ordering.Infrastructure.pdb
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\bin\Debug\netstandard2.1\Ordering.Domain.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\bin\Debug\netstandard2.1\Ordering.Domain.pdb
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.csprojAssemblyReference.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.AssemblyInfo.cs
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.csproj.CopyComplete
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\Ordering\Ordering.Infrastructure\obj\Debug\netstandard2.1\Ordering.Infrastructure.pdb

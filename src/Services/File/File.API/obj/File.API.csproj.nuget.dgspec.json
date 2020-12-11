@@ -1,0 +1,329 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\Services\\File\\File.API\\File.API.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj",
+        "projectName": "EventBusRabbitMQ",
+        "projectPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj",
+        "packagesPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBusRabbitMQ\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\NuGet.Config",
+          "C:\\Users\\hafiz.roslan.HARTALEGA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/aspnetcore-tools/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/dotnet-core/api/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {
+              "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj": {
+                "projectPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Autofac": {
+              "target": "Package",
+              "version": "[4.9.4, )"
+            },
+            "Microsoft.CSharp": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[7.2.0, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.0.0-rc1, )"
+            },
+            "System.ValueTuple": {
+              "target": "Package",
+              "version": "[4.6.0-preview1-26829-04, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj",
+        "projectName": "EventBus",
+        "projectPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj",
+        "packagesPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\NuGet.Config",
+          "C:\\Users\\hafiz.roslan.HARTALEGA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/aspnetcore-tools/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/dotnet-core/api/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\Services\\File\\File.API\\File.API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\Services\\File\\File.API\\File.API.csproj",
+        "projectName": "File.API",
+        "projectPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\Services\\File\\File.API\\File.API.csproj",
+        "packagesPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\Services\\File\\File.API\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\NuGet.Config",
+          "C:\\Users\\hafiz.roslan.HARTALEGA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/aspnetcore-tools/api/v3/index.json": {},
+          "https://dotnet.myget.org/F/dotnet-core/api/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj": {
+                "projectPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBusRabbitMQ\\EventBusRabbitMQ.csproj"
+              },
+              "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj": {
+                "projectPath": "C:\\Users\\hafiz.roslan.HARTALEGA\\Documents\\Workspaces\\Projects\\HartaRPA\\src\\BuildingBlocks\\EventBus\\EventBus\\EventBus.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "AspNetCore.HealthChecks.Rabbitmq": {
+              "target": "Package",
+              "version": "[3.0.3, )"
+            },
+            "AspNetCore.HealthChecks.Redis": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "AspNetCore.HealthChecks.UI.Client": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Google.Api.Gax.Grpc": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.33.1, )"
+            },
+            "Grpc.AspNetCore.Server.Reflection": {
+              "target": "Package",
+              "version": "[2.33.1, )"
+            },
+            "Microsoft.ApplicationInsights.AspNetCore": {
+              "target": "Package",
+              "version": "[2.12.0, )"
+            },
+            "Microsoft.ApplicationInsights.DependencyCollector": {
+              "target": "Package",
+              "version": "[2.12.0, )"
+            },
+            "Microsoft.ApplicationInsights.Kubernetes": {
+              "target": "Package",
+              "version": "[1.1.1, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Microsoft.AspNetCore.Diagnostics.HealthChecks": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.HealthChecks": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.10.9, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "Serilog.Enrichers.Environment": {
+              "target": "Package",
+              "version": "[2.1.3, )"
+            },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[3.1.1-dev-00216, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[4.0.0-dev-00834, )"
+            },
+            "Serilog.Sinks.Http": {
+              "target": "Package",
+              "version": "[5.2.0, )"
+            },
+            "Serilog.Sinks.Seq": {
+              "target": "Package",
+              "version": "[4.1.0-dev-00166, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.0.0-rc5, )"
+            }
+          },
+          "imports": [
+            "portable-net45+win8+wp8+wpa81",
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\bin\Debug\netstandard2.1\EFIntegrationEventLog.deps.json
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\bin\Debug\netstandard2.1\EFIntegrationEventLog.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\bin\Debug\netstandard2.1\EFIntegrationEventLog.pdb
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\bin\Debug\netstandard2.1\EventBus.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\bin\Debug\netstandard2.1\EventBus.pdb
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.csprojAssemblyReference.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.AssemblyInfoInputs.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.AssemblyInfo.cs
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.csproj.CoreCompileInputs.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.csproj.CopyComplete
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EFIntegrationEventLog\obj\Debug\netstandard2.1\EFIntegrationEventLog.pdb

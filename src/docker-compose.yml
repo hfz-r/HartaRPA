@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  envoy-proxy:
+    image: envoyproxy/envoy:v1.16-latest
+
+  file-service:
+    image: ${REGISTRY:-harta}/file.service:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/File/File.API/Dockerfile
+
+  # ordering.api:
+  #   image: ${DOCKER_REGISTRY-}orderingapi
+  #   build:
+  #     context: .
+  #     dockerfile: Services/Ordering/Ordering.API/Dockerfile

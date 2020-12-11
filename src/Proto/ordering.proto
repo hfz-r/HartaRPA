@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "file.proto";
+
+package harta.ordering;
+
+service OrderingService {
+  rpc CreateOrder(CreateOrderRequest) returns (file.FormatResponse) {
+    option (google.api.http) = {
+      post : "/order/create"
+      body : "*"
+    };
+  }
+}
+
+message CreateOrderRequest {
+  string path = 1;
+  string system_type = 2;
+  OrderDTO order = 3;
+}
+
+message OrderDTO {
+  string customer_ref = 1;
+  string ponumber = 2;
+  google.protobuf.Timestamp podate = 3;
+  repeated OrderLineDTO lines = 4;
+}
+
+message OrderLineDTO {
+  string fgcode = 1;
+  string size = 2;
+  int32 quantity = 3
+}

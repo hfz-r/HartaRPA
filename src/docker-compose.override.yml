@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  envoy-proxy:
+    environment:
+      - ENVOY_UID=0
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "8001:8001"
+    volumes: 
+      - ./Proto/proto.pb:/tmp/envoy
+      - ./ApiGateways/Envoy/envoy.yaml:/etc/envoy
+      - ./ApiGateways/Envoy/ssl:/etc/ssl/certs
+
+  file-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - PATH_BASE=/file-svc
+      - GRPC_PORT=81
+      - PORT=80
+    ports:
+      - "80"
+      - "5101:443"
+      - "9101:81"
+
+  # ordering.api:
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #   ports:
+  #     - "80"
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

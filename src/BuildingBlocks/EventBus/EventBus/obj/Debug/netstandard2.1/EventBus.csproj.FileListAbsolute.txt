@@ -1,0 +1,9 @@
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\bin\Debug\netstandard2.1\EventBus.deps.json
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\bin\Debug\netstandard2.1\EventBus.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\bin\Debug\netstandard2.1\EventBus.pdb
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\obj\Debug\netstandard2.1\EventBus.AssemblyInfoInputs.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\obj\Debug\netstandard2.1\EventBus.AssemblyInfo.cs
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\obj\Debug\netstandard2.1\EventBus.csproj.CoreCompileInputs.cache
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\obj\Debug\netstandard2.1\EventBus.dll
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\obj\Debug\netstandard2.1\EventBus.pdb
+C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\BuildingBlocks\EventBus\EventBus\obj\Debug\netstandard2.1\EventBus.csprojAssemblyReference.cache

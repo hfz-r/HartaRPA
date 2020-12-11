@@ -1,0 +1,59 @@
+services:
+  envoy-proxy:
+    image: envoyproxy/envoy:v1.16-latest
+    ports:
+    - 5201:5201/tcp
+    - 15201:9901/tcp
+    volumes:
+    - C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\ApiGateways\Envoy:/etc/envoy:rw
+    - proto-pb:/tmp/envoy/:rw
+  envoy-volume:
+    build:
+      context: C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src
+      dockerfile: ApiGateways/Envoy/Dockerfile
+    image: harta/envoy.volume:linux-latest
+    volumes:
+    - proto-pb:/tmp/:rw
+  file-service:
+    build:
+      context: C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src
+      dockerfile: Services/File/File.API/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: File.API
+      target: base
+    container_name: File.API
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      ASPNETCORE_URLS: http://+:80
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      GRPC_PORT: '81'
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+      PATH_BASE: /file-svc
+      PORT: '80'
+    image: harta/file.service:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/netcoreapp3.1/File.API.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - 80/tcp
+    - 9101:81/tcp
+    - 5101:443/tcp
+    tty: true
+    volumes:
+    - C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src\Services\File\File.API:/app:rw
+    - C:\Users\hafiz.roslan.HARTALEGA\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\hafiz.roslan.HARTALEGA\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\hafiz.roslan.HARTALEGA\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Program Files\dotnet\sdk\NuGetFallbackFolder:/root/.nuget/fallbackpackages:ro
+    - C:\Users\hafiz.roslan.HARTALEGA\.nuget\packages:/root/.nuget/packages:ro
+    - C:\Users\hafiz.roslan.HARTALEGA\Documents\Workspaces\Projects\HartaRPA\src:/src:rw
+version: '3.4'
+volumes:
+  proto-pb: {}
