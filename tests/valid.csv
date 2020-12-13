@@ -1,0 +1,6 @@
+Purchase_Order_Date,Purchase_Order_Number,Company_name,Requested_Shipped_Date,item_description,quantity,Item_Number,Unit_of_Measure,Size,Material_No,Result
+03.06.2020,CA-009747,,12.02.2021,"Solace, Nitrile Exam Gloves,Blue,X-Small",45,PM6-2905,,,,TRUE
+03.06.2020,CA-009747,,12.02.2021,"Solace, Nitrile Exam Gloves,Blue,Small",475,PM6-2906,,,,TRUE
+03.06.2020,CA-009747,,12.02.2021,"Solace, Nitrile Exam Gloves,Blue,Medium",951,PM6-2907,,,,TRUE
+03.06.2020,CA-009747,,12.02.2021,"Solace, Nitrile Exam Gloves,Blue,Large",677,PM6-2908,,,,TRUE
+03.06.2020,CA-009747,,12.02.2021,"Solace, Nitrile Exam Gloves,Blue,X-Large",120,PM6-2909,,,,TRUE

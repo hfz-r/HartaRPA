@@ -97,6 +97,8 @@ namespace Harta.Services.File.API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Repository TODO
             //IdentityService TODO
+            services.AddTransient<IFileExtractService, FileExtractService>();
+
             services.AddOptions();
 
             var container = new ContainerBuilder();
