@@ -26,8 +26,6 @@ namespace File.UnitTests.Services
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
             await fileSvc.ReadFileAsync("valid.csv", "AX4");
-
-            //Assert
         }
 
         [Fact]
@@ -35,12 +33,14 @@ namespace File.UnitTests.Services
         {
             //Arrange
             var fileSettings = new TestFileSettings();
+            var invalids = new[] {"invalid1.csv", "invalid2.csv", "invalid3.csv"};
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            await fileSvc.ReadFileAsync("invalid.csv", "D365");
-
-            //Assert
+            foreach (var invalid in invalids)
+            {
+                await fileSvc.ReadFileAsync(invalid, "D365");
+            }
         }
     }
 
@@ -49,24 +49,7 @@ namespace File.UnitTests.Services
         public FileSettings Value => new FileSettings
         {
             ConnectionString = string.Empty,
-            SourceFile = new SourceFile
-            {
-                Folder = "C:\\Users\\amira\\Documents\\Workspace",
-                Headers = new string[] 
-                { 
-                    "Purchase_Order_Date", 
-                    "Purchase_Order_Number", 
-                    "Company_name", 
-                    "Requested_Shipped_Date", 
-                    "item_description", 
-                    "quantity", 
-                    "Item_Number", 
-                    "Unit_of_Measure", 
-                    "Size", 
-                    "Material_No",
-                    "Result"
-                }
-            }
+            SourceFolder = "C:\\Users\\hafiz.roslan.HARTALEGA\\Desktop\\tests",
         };
     }
 }

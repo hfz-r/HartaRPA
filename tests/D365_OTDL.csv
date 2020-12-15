@@ -1,7 +1,0 @@
-Purchase_Order_Date,Purchase_Order_Number,Company_name,Requested_Shipped_Date,Table-repeated-section-1:item_description,quantity,Item_Number,Unit_of_Measure,Size,Material_No,item_description,OTDL,FG code,Lookup Size,Actual Unit,Base Quantity,Gloves Inner box No,Inner box in Case No,Quantity in Case,Prefix of PO number
-30.05.2018,No. 1.2,,,2.8g Nitrile PF (200pcs)_S,595,,2.8g Nitrile PF (200pcs)_S_S,S,,,OTDL,FG-OTDL-0001,S,CASE,0,0,0,595,0
-30.05.2018,No. 1.2,,,2.8g Nitrile PF (200pcs)_M,765,,2.8g Nitrile PF (200pcs)_M_M,M,,,OTDL,FG-OTDL-0001,M,CASE,0,0,0,765,0
-30.05.2018,No. 1.2,,,2.8g Nitrile PF (200pcs)_L,340,,2.8g Nitrile PF (200pcs)_L_L,L,,,OTDL,FG-OTDL-0001,L,CASE,0,0,0,340,0
-30.05.2018,No. 1.2,,,3.2g Nitrile COATS PF (200pcs)_S,267,,3.2g Nitrile COATS PF (200pcs)_S_S,S,,,OTDL,FG-OTDL-0003,S,CASE,0,0,0,267,0
-30.05.2018,No. 1.2,,,3.2g Nitrile COATS PF (200pcs)_M,589,,3.2g Nitrile COATS PF (200pcs)_M_M,M,,,OTDL,FG-OTDL-0003,M,CASE,0,0,0,589,0
-30.05.2018,No. 1.2,,,3.2g Nitrile COATS PF (200pcs)_L,214,,3.2g Nitrile COATS PF (200pcs)_L_L,L,,,OTDL,FG-OTDL-0003,L,CASE,0,0,0,214,0

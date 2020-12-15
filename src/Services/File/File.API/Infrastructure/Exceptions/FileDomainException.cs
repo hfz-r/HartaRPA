@@ -1,6 +1,6 @@
 using System;
 
-namespace Harta.Services.File.API.Exceptions
+namespace Harta.Services.File.API.Infrastructure.Exceptions
 {
     public class FileDomainException : Exception
     {
