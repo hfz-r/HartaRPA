@@ -24,6 +24,7 @@
 
 	<ItemGroup>
 		<Protobuf Include="..\..\..\Proto\file.proto" GrpcServices="Server" Link="Proto\file.proto" />
+		<Protobuf Include="..\..\..\Proto\ordering.proto" GrpcServices="Client" Link="Proto\ordering.proto" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -31,6 +32,7 @@
 		<PackageReference Include="AspNetCore.HealthChecks.Redis" Version="3.0.0" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
 		<PackageReference Include="CsvHelper" Version="17.0.1" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.33.1" />
 		<PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.33.1" />

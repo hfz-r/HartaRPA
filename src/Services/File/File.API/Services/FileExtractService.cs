@@ -47,7 +47,7 @@ namespace Harta.Services.File.API.Services
 
         #endregion
 
-        public async Task ReadFileAsync(string fileName, string systemType)
+        public async Task<IList<PurchaseOrder>> ReadFileAsync(string fileName, string systemType)
         {
             var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName);
 
@@ -74,7 +74,7 @@ namespace Harta.Services.File.API.Services
                 csv.ReadHeader();
                 csv.ValidateHeader<PurchaseOrder>();
 
-                if (skip) return;
+                if (skip) return csv.GetRecords<PurchaseOrder>().ToList();
 
                 while (await csv.ReadAsync())
                 {
@@ -97,6 +97,8 @@ namespace Harta.Services.File.API.Services
                 }
 
                 await WriteFileAsync(fileName, records);
+
+                return records;
             }
             catch (Exception ex)
             {

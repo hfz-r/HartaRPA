@@ -1,11 +1,13 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Harta.Services.File.API.Infrastructure.Middleware;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Harta.Services.File.API
@@ -15,7 +17,7 @@ namespace Harta.Services.File.API
         public static readonly string Namespace = typeof(Program).Namespace;
         public static readonly string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
 
-        public static int Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var configuration = Configuration();
 
@@ -24,17 +26,14 @@ namespace Harta.Services.File.API
             try
             {
                 Log.Information("Configuring web host ({ApplicationContext})", AppName);
-                var host = BuildWebHost(configuration, args);
+                var host = CreateHostBuilder(configuration, args).Build();
 
                 Log.Information("Starting web host ({ApplicationContext})...", AppName);
-                host.Run();
-
-                return 0;
+                await host.RunAsync();
             }
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Program terminated unexpectedly ({ApplicationContext})!", AppName);
-                return 1;
             }
             finally
             {
@@ -42,10 +41,10 @@ namespace Harta.Services.File.API
             }
         }
 
-        #region Private methods
-
-        private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(IConfiguration configuration, string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => webBuilder
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .CaptureStartupErrors(false)
                 .ConfigureKestrel(options =>
                 {
@@ -56,16 +55,17 @@ namespace Harta.Services.File.API
                     options.Listen(IPAddress.Any, grpcPort,
                         listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
                 })
-                .ConfigureAppConfiguration(builder => builder.AddConfiguration(configuration))
                 .UseFailing(options =>
                 {
                     options.ConfigPath = "/Failing";
                     options.NotFilteredPaths.AddRange(new[] {"/hc", "/liveness"});
                 })
-                .UseStartup<Startup>()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseSerilog()
-                .Build();
+                .UseStartup<Startup>())
+            .ConfigureAppConfiguration(builder => builder.AddConfiguration(configuration))
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .UseSerilog();
+
+        #region Private methods
 
         private static IConfiguration Configuration()
         {
@@ -77,7 +77,7 @@ namespace Harta.Services.File.API
             return builder.Build();
         }
 
-        private static Serilog.ILogger CreateLogger(IConfiguration configuration)
+        private static ILogger CreateLogger(IConfiguration configuration)
         {
             var seqServerUrl = configuration["Serilog:SeqServerUrl"];
             var logStashUrl = configuration["Serilog:LogStashUrl"];

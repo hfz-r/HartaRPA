@@ -1,11 +1,14 @@
 syntax = "proto3";
 
-import "google/api/annotations.proto";
-
 package harta.file;
 
+option csharp_namespace = "Harta.Services.File.Grpc";
+
+import "google/api/annotations.proto";
+import "ordering.proto";
+
 service FileService {
-  rpc Format(FormatRequest) returns (FormatResponse) {
+  rpc Format(FormatRequest) returns (harta.ordering.CreateOrderResponse) {
     option (google.api.http) = {
       get : "file/format/{file_name}"
     };
@@ -13,11 +16,9 @@ service FileService {
 }
 
 message FormatRequest {
+  // file name from BC
   string file_name = 1;
-  string file_type = 2;
-}
 
-message FormatResponse {
-  bool status = 1;
-  string message = 2;
+  // erp type from BC
+  string file_type = 2;
 }

@@ -1,10 +1,10 @@
 using System;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using Harta.BuildingBlocks.EventBusRabbitMQ;
 using Harta.Services.File.API.Extensions;
 using Harta.Services.File.API.Infrastructure.Filters;
 using Harta.Services.File.API.Services;
+using Harta.Services.Ordering.Grpc;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
+using Serilog;
 using StackExchange.Redis;
 
 namespace Harta.Services.File.API
@@ -30,10 +31,15 @@ namespace Harta.Services.File.API
 
         public IConfiguration Configuration { get; }
 
-        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc(options => { options.EnableDetailedErrors = true; });
             services.AddGrpcReflection();
+            services.AddGrpcClient<OrderingService.OrderingServiceClient>(options =>
+            {
+                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+                options.Address = new Uri("ordering-service");
+            }).EnableCallContextPropagation();
             services.AddAppInsights(Configuration);
             services.AddControllers(options =>
                 {
@@ -54,6 +60,7 @@ namespace Harta.Services.File.API
                 //options.AddSecurityDefinition TODO
             });
             //services.AddAuthService(); TODO
+            services.AddAutoMapper();
             services.AddCustomHealthCheck(Configuration);
             services.Configure<FileSettings>(Configuration);
             services.AddSingleton(svc =>
@@ -97,14 +104,17 @@ namespace Harta.Services.File.API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Repository TODO
             //IdentityService TODO
-            services.AddTransient<IFileExtractService, FileExtractService>();
-
             services.AddOptions();
+        }
 
-            var container = new ContainerBuilder();
-            container.Populate(services);
-
-            return new AutofacServiceProvider(container.Build());
+        /// <summary>
+        /// Add any Autofac modules or registrations.
+        /// </summary>
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterType<FileExtractService>().As<IFileExtractService>();
+            //builder.RegisterModule(new AutofacModule());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -120,10 +130,11 @@ namespace Harta.Services.File.API
                     "File.API V1");
                 //OAuth TODO
             });
+            app.UseStaticFiles();
+            app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseCors("CorsPolicy");
             //app.UseAuthService(Configuration); TODO
-            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<FileFormatService>();

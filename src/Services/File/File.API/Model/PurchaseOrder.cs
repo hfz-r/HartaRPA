@@ -3,7 +3,7 @@ using System;
 
 namespace Harta.Services.File.API.Model
 {
-    public class PurchaseOrder
+    public class PurchaseOrder : BaseModel
     {
         public DateTime PurchaseOrderDate { get; set; }
         public string PurchaseOrderNumber { get; set; }

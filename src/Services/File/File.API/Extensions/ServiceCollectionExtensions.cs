@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using AutoMapper;
 using Harta.BuildingBlocks.EventBus;
 using Harta.BuildingBlocks.EventBus.Abstractions;
 using Harta.BuildingBlocks.EventBusRabbitMQ;
+using Harta.Services.File.API.Infrastructure.AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -20,6 +22,14 @@ namespace Harta.Services.File.API.Extensions
         public static void AddAuthService(this IServiceCollection services)
         {
             //TODO
+        }
+
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            var config = new MapperConfiguration(conf => { conf.AddProfile<AutoMapperProfile>(); });
+            AutoMapperConfiguration.Init(config);
+
+            config.AssertConfigurationIsValid();
         }
 
         public static void AddCustomHealthCheck(this IServiceCollection services, IConfiguration configuration)
