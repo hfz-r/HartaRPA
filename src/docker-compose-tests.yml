@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  sql-test:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+
+  nosql-test:
+    image: mongo
+
+  redis-test:
+    image: redis:alpine
+
+  rabbitmq-test:
+    image: rabbitmq:3-management-alpine
+
+  envoy-proxy-test:
+    image: envoyproxy/envoy:v1.16-latest
+
+  file-service-test:
+    image: ${REGISTRY:-harta}/file-service-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/File/File.API/Dockerfile
+    depends_on:
+      - redis-test
+      - rabbitmq-test
+
+  ordering-service-test:
+    image: ${REGISTRY:-harta}/ordering-service-test:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+    depends_on:
+      - sql-test
+      - rabbitmq-test

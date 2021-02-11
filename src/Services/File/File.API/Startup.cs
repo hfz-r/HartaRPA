@@ -35,11 +35,12 @@ namespace Harta.Services.File.API
         {
             services.AddGrpc(options => { options.EnableDetailedErrors = true; });
             services.AddGrpcReflection();
-            services.AddGrpcClient<OrderingService.OrderingServiceClient>(options =>
-            {
-                AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
-                options.Address = new Uri("ordering-service");
-            }).EnableCallContextPropagation();
+            services.AddGrpcClient<OrderingService.OrderingServiceClient>((sp, options) =>
+                {
+                    AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+                    options.Address = new Uri(Configuration["OrderingUrl"]);
+                })
+                .EnableCallContextPropagation();
             services.AddAppInsights(Configuration);
             services.AddControllers(options =>
                 {
@@ -107,10 +108,6 @@ namespace Harta.Services.File.API
             services.AddOptions();
         }
 
-        /// <summary>
-        /// Add any Autofac modules or registrations.
-        /// </summary>
-        /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<FileExtractService>().As<IFileExtractService>();

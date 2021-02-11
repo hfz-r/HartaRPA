@@ -4,5 +4,6 @@
     {
         public string ConnectionString { get; set; }
         public string SourceFolder { get; set; }
+        public string FileExtension { get; set; }
     }
 }

@@ -24,8 +24,8 @@ if [[ $api == "file" ]]; then
     proto_file="$api".proto
 elif [[ $api == "ordering" ]]; then
     echo "Generating OpenAPI spec for Ordering API..."
-    # target_dir=${ROOT_DIR}/src/Services/File/File.API
-    # proto_file="$api".proto
+    target_dir=${ROOT_DIR}/src/Services/Ordering/Ordering.API
+    proto_file="$api".proto
 fi
 
 protoc -I$PROTO_PATH \

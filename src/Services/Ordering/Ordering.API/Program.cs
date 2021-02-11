@@ -1,14 +1,16 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Harta.BuildingBlocks.EFIntegrationEventLog;
 using Harta.Services.Ordering.API.Infrastructure;
 using Harta.Services.Ordering.Infrastructure;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -20,7 +22,7 @@ namespace Harta.Services.Ordering.API
         public static readonly string Namespace = typeof(Program).Namespace;
         public static readonly string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
 
-        public static int Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var configuration = Configuration();
 
@@ -29,7 +31,7 @@ namespace Harta.Services.Ordering.API
             try
             {
                 Log.Information("Configuring web host ({ApplicationContext})", AppName);
-                var host = BuildWebHost(configuration, args);
+                var host = CreateHostBuilder(configuration, args).Build();
 
                 Log.Information("Applying migrations ({ApplicationContext})...", AppName);
                 host.MigrateDbContext<OrderingContext>((context, provider) =>
@@ -44,14 +46,11 @@ namespace Harta.Services.Ordering.API
                 }).MigrateDbContext<IntegrationEventLogContext>((_, __) => { });
 
                 Log.Information("Starting web host ({ApplicationContext})...", AppName);
-                host.Run();
-
-                return 0;
+                await host.RunAsync();
             }
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Program terminated unexpectedly ({ApplicationContext})!", AppName);
-                return 1;
             }
             finally
             {
@@ -59,10 +58,10 @@ namespace Harta.Services.Ordering.API
             }
         }
 
-        #region Private methods
-
-        private static IWebHost BuildWebHost(IConfiguration configuration, string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(IConfiguration configuration, string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => webBuilder
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .CaptureStartupErrors(false)
                 .ConfigureKestrel(options =>
                 {
@@ -73,11 +72,12 @@ namespace Harta.Services.Ordering.API
                     options.Listen(IPAddress.Any, grpcPort,
                         listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
                 })
-                .ConfigureAppConfiguration(builder => builder.AddConfiguration(configuration))
-                .UseStartup<Startup>()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseSerilog()
-                .Build();
+                .UseStartup<Startup>())
+            .ConfigureAppConfiguration(builder => builder.AddConfiguration(configuration))
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .UseSerilog();
+
+        #region Private methods
 
         private static IConfiguration Configuration()
         {

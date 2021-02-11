@@ -1,6 +1,23 @@
 version: '3.4'
 
 services:
+  seq:
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5340:80"
+    
+  redis:
+    ports:
+      - "6379:6379"
+    volumes:
+      - filedata:/data
+      
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
   envoy-proxy:
     environment:
       - ENVOY_UID=0
@@ -17,6 +34,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - OrderingUrl=http://ordering-service
       - PATH_BASE=/file-svc
       - GRPC_PORT=81
       - PORT=80
@@ -32,3 +50,7 @@ services:
   #     - "80"
   #   volumes:
   #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+volumes:
+  filedata:
+    external: false

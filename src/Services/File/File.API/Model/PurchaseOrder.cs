@@ -32,7 +32,7 @@ namespace Harta.Services.File.API.Model
             Map(m => m.UnitOfMeasure).Name("Unit_of_Measure");
             Map(m => m.Size).Name("Size");
             Map(m => m.MaterialNo).Name("Material_No");
-            Map(m => m.Result).ConvertUsing(row => row.Result.ToUpper());
+            Map(m => m.Result).ConvertUsing(row => row.Result?.ToUpper());
         }
     }
 }

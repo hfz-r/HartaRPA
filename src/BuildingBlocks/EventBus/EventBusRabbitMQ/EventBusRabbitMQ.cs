@@ -40,11 +40,11 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
                 persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
-            _consumerChannel = CreateConsumerChannel();
-            _subsManager.OnEventRemoved += OnEventRemoved;
-            _autofac = autofac;
             _queueName = queueName;
+            _consumerChannel = CreateConsumerChannel();
+            _autofac = autofac;
             _retryCount = retryCount;
+            _subsManager.OnEventRemoved += OnEventRemoved;
         }
 
         #region Private methods

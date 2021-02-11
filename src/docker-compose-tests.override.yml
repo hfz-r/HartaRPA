@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  sql-test:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+
+  nosql-test:
+    ports:
+      - "27017:27017"
+
+  redis-test:
+    ports:
+      - "6379:6379"
+
+  rabbitmq-test:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  envoy-proxy-test:
+    environment:
+      - ENVOY_UID=0
+    ports:
+      - "8080:80"
+      - "8443:443"
+      - "8001:8001"
+    volumes: 
+      - ./Proto/proto.pb:/tmp/envoy/proto.pb
+      - ./ApiGateways/Envoy/test/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./ApiGateways/Envoy/ssl:/etc/ssl/certs
+
+  file-service-test:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - OrderingUrl=http://ordering-service-test:5001
+      - ConnectionString=redis-test
+      - EventBusConnection=rabbitmq-test
+      - SourceFolder=/media/test
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      - UseLoadTest=${USE_LOADTEST:-False}
+    volumes: 
+      - /c/Users/hafiz.roslan.HARTALEGA/Documents/RPA/Projects/HartaRPA/tests:/media/test
+    ports:
+      - "5111:80"
+  
+  ordering-service-test:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionString=Server=sql-test;Database=OrderingDb;User Id=sa;Password=Pass@word
+      - EventBusConnection=rabbitmq-test
+      - UseCustomizationData=True
+      - CheckUpdateTime=30000
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      - OrchestratorType=${ORCHESTRATOR_TYPE}
+      - UseLoadTest=${USE_LOADTEST:-False}
+    ports:
+      - "5112:80"
+      - "5113:5001"      

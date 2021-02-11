@@ -1,0 +1,169 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ordering.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "OrderingService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/order/create": {
+      "post": {
+        "operationId": "OrderingService_CreateOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/orderingCreateOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/orderingCreateOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "OrderingService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "orderingCreateOrderRequest": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "title": "filename"
+        },
+        "systemType": {
+          "type": "string",
+          "title": "erp type ex:d365"
+        },
+        "type": {
+          "$ref": "#/definitions/orderingCreateOrderRequestType",
+          "title": "distinguish part1 and part2 stage"
+        },
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/orderingOrderDTO"
+          },
+          "title": "purchase order object"
+        }
+      }
+    },
+    "orderingCreateOrderRequestType": {
+      "type": "string",
+      "enum": [
+        "TYPE_INVALID",
+        "TYPE_P1",
+        "TYPE_P2"
+      ],
+      "default": "TYPE_INVALID",
+      "title": "p1 for part1 file and p2 for part2 file"
+    },
+    "orderingCreateOrderResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "title": "post-execution result"
+        },
+        "message": {
+          "type": "string",
+          "title": "internal message/exception"
+        }
+      }
+    },
+    "orderingOrderDTO": {
+      "type": "object",
+      "properties": {
+        "customerRef": {
+          "type": "string"
+        },
+        "ponumber": {
+          "type": "string"
+        },
+        "podate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/orderingOrderLineDTO"
+          }
+        }
+      },
+      "title": "po data holder object"
+    },
+    "orderingOrderLineDTO": {
+      "type": "object",
+      "properties": {
+        "fgcode": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "po details data holder object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "typeUrl": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

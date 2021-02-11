@@ -26,9 +26,14 @@ namespace Harta.Services.File.API.Services
 
         #region Private/internal methods
 
-        internal static T TryGetValue<T>(IEnumerable<string> keys, IReaderRow reader)
+        private static IEnumerable<string> GetKeys(string key, ReadingContext context)
         {
-            foreach (var key in keys)
+            return context.HeaderRecord.Where(h => h.Contains(key));
+        }
+
+        internal static T TryGetValue<T>(string src, IReaderRow reader)
+        {
+            foreach (var key in GetKeys(src, reader.Context))
             {
                 var field = reader.GetField(key);
                 if (!string.IsNullOrEmpty(field)) return field.GetValueOrNull<T>();
@@ -49,7 +54,7 @@ namespace Harta.Services.File.API.Services
 
         public async Task<IList<PurchaseOrder>> ReadFileAsync(string fileName, string systemType)
         {
-            var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName);
+            var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.SetFileName(_settings));
 
             if (!IO.File.Exists(csvFile))
             {
@@ -58,7 +63,6 @@ namespace Harta.Services.File.API.Services
                 throw new FileDomainException($"{fileName} not exist.");
             }
 
-            var skip = false;
             var records = new List<PurchaseOrder>();
 
             try
@@ -67,36 +71,35 @@ namespace Harta.Services.File.API.Services
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
                 // configuration
                 csv.Configuration.RegisterClassMap<PurchaseOrderMap>();
-                csv.Configuration.HeaderValidated = OnHeaderValidated;
+                csv.Configuration.HeaderValidated = null;
                 csv.Configuration.MissingFieldFound = null;
 
                 csv.Read();
                 csv.ReadHeader();
-                csv.ValidateHeader<PurchaseOrder>();
-
-                if (skip) return csv.GetRecords<PurchaseOrder>().ToList();
 
                 while (await csv.ReadAsync())
                 {
-                    var record = new PurchaseOrder
+                    if (!string.IsNullOrEmpty(csv.TryGetValue<string>("item_description")) ||
+                        !string.IsNullOrEmpty(csv.TryGetValue<string>("Item_Number")))
                     {
-                        PurchaseOrderDate = csv.TryGetValue<DateTime>(new[] {"Purchase_Order_Date"}),
-                        PurchaseOrderNumber = csv.TryGetValue<string>(new[] {"Purchase_Order_Number"}),
-                        CompanyName = csv.TryGetValue<string>(new[] {"Company_name"}),
-                        RequestedShippedDate = csv.TryGetValue<DateTime?>(new[] {"Requested_Shipped_Date"}),
-                        ItemDescription = csv.TryGetValue<string>(new[] {"Table-repeated-section-1:item_description", "item_description"}),
-                        Quantity = csv.TryGetValue<int?>(new[] {"quantity"}),
-                        ItemNumber = csv.TryGetValue<string>(new[] {"Item_Number"}),
-                        UnitOfMeasure = csv.TryGetValue<string>(new[] {"Unit_of_Measure"}),
-                        Size = csv.TryGetValue<string>(new[] {"Size"}),
-                        MaterialNo = csv.TryGetValue<string>(new[] {"Material_No"}),
-                        Result = csv.TryGetValue<string>(new[] {"Result", "item_description"})
-                    };
+                        var record = new PurchaseOrder
+                        {
+                            PurchaseOrderDate = csv.TryGetValue<DateTime>("Purchase_Order_Date"),
+                            PurchaseOrderNumber = csv.TryGetValue<string>("Purchase_Order_Number"),
+                            CompanyName = csv.TryGetValue<string>("Company_name"),
+                            RequestedShippedDate = csv.TryGetValue<DateTime?>("Requested_Shipped_Date"),
+                            ItemDescription = csv.TryGetValue<string>("item_description"),
+                            Quantity = csv.TryGetValue<int?>("quantity"),
+                            ItemNumber = csv.TryGetValue<string>("Item_Number"),
+                            UnitOfMeasure = csv.TryGetValue<string>("Unit_of_Measure"),
+                            Size = csv.TryGetValue<string>("Size"),
+                            MaterialNo = csv.TryGetValue<string>("Material_No"),
+                            Result = csv.TryGetValue<string>("Result")
+                        };
 
-                    records.Add(record);
+                        records.Add(record);
+                    }
                 }
-
-                await WriteFileAsync(fileName, records);
 
                 return records;
             }
@@ -106,44 +109,16 @@ namespace Harta.Services.File.API.Services
 
                 throw;
             }
-
-            #region Local methods
-
-            void OnHeaderValidated(InvalidHeader[] headers, ReadingContext context)
-            {
-                #region Headers specification for a valid PO
-
-                var headerSpec = new[]
-                {
-                    "Purchase_Order_Date",
-                    "Purchase_Order_Number",
-                    "Company_name",
-                    "Requested_Shipped_Date",
-                    "item_description",
-                    "quantity",
-                    "Item_Number",
-                    "Unit_of_Measure",
-                    "Size",
-                    "Material_No",
-                    "Result"
-                };
-
-                #endregion
-
-                if (headers.Length == 0 && context.HeaderRecord.SequenceEqual(headerSpec)) skip = true;
-            }
-
-            #endregion
         }
 
-        public async Task WriteFileAsync(string fileName, IList<PurchaseOrder> records)
+        public async Task WriteFileAsync(IList<PurchaseOrder> records, string fileName, bool timestamp = false)
         {
-            var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.AppendTimeStamp());
+            var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.SetFileName(_settings).SetTimeStamp(timestamp));
 
             try
             {
-                using var writer = new IO.StreamWriter(csvFile) {AutoFlush = true};
-                using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+                await using var writer = new IO.StreamWriter(csvFile) {AutoFlush = true};
+                await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
                 // configuration
                 csv.Configuration.RegisterClassMap<PurchaseOrderMap>();
 
@@ -164,23 +139,43 @@ namespace Harta.Services.File.API.Services
         {
             var type = typeof(T);
 
-            return (T) (Nullable.GetUnderlyingType(type) != null
+            return Nullable.GetUnderlyingType(type) != null
                 ? ToNullable<T>(src)
-                : Convert.ChangeType(src, typeof(T)));
+                : ChangeType<T>(src);
         }
 
-        public static T TryGetValue<T>(this IReaderRow reader, IEnumerable<string> keys)
+        public static T TryGetValue<T>(this IReaderRow reader, string key)
         {
-            return FileExtractService.TryGetValue<T>(keys, reader);
+            return FileExtractService.TryGetValue<T>(key, reader);
         }
 
-        public static string AppendTimeStamp(this string fileName)
+        public static string SetFileName(this string fileName, FileSettings settings)
         {
-            return string.Concat(
-                IO.Path.GetFileNameWithoutExtension(fileName),
-                "_",
-                DateTime.Now.ToString("yyyyMMdd_HHmmss"),
-                IO.Path.GetExtension(fileName));
+            var ext = IO.Path.GetExtension(fileName);
+
+            return !string.IsNullOrEmpty(ext) && ext == settings.FileExtension
+                ? fileName
+                : $"{fileName}{settings.FileExtension}";
+        }
+
+        public static string SetTimeStamp(this string fileName, bool timestamp)
+        {
+            return timestamp
+                ? string.Concat(
+                    IO.Path.GetFileNameWithoutExtension(fileName),
+                    "_",
+                    DateTime.Now.ToString("yyyyMMdd_HHmmss"),
+                    IO.Path.GetExtension(fileName))
+                : fileName;
+        }
+
+        public static T ChangeType<T>(this string src)
+        {
+            var convert = typeof(T) == typeof(DateTime)
+                ? DateTime.ParseExact(src, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                : Convert.ChangeType(src, typeof(T), CultureInfo.InvariantCulture);
+
+            return (T) convert;
         }
 
         public static T ToNullable<T>(this string src)

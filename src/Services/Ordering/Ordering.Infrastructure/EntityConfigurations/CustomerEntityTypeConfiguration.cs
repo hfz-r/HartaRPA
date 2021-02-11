@@ -16,17 +16,17 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .Property(o => o.Id)
                 .UseHiLo("customer-seq", OrderingContext.DefaultSchema);
 
-            builder
-                .HasIndex("IdentityGuid")
-                .IsUnique();
-
             builder.OwnsOne(o => o.Address, a => { a.WithOwner(); });
 
             #region Common properties
 
-            builder.Property(b => b.Guid)
+            builder.Property(b => b.IdentityGuid)
                 .HasMaxLength(200)
                 .IsRequired();
+
+            builder
+                .HasIndex("IdentityGuid")
+                .IsUnique();
 
             builder.Property(b => b.Name);
 

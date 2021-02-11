@@ -1,6 +1,15 @@
 version: '3.4'
 
 services:
+  seq:
+    image: datalust/seq:latest
+
+  redis:
+    image: redis:alpine
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
   envoy-proxy:
     image: envoyproxy/envoy:v1.16-latest
 
@@ -9,6 +18,9 @@ services:
     build:
       context: .
       dockerfile: Services/File/File.API/Dockerfile
+    depends_on:
+      - redis
+      - rabbitmq
 
   # ordering.api:
   #   image: ${DOCKER_REGISTRY-}orderingapi

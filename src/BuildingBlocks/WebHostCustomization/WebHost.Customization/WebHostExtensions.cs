@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Polly;
 
@@ -10,20 +11,20 @@ namespace Microsoft.AspNetCore.Hosting
 {
     public static class WebHostExtensions
     {
-        public static bool IsInKubernetes(this IWebHost webHost)
+        public static bool IsInKubernetes(this IHost host)
         {
-            var configuration = webHost.Services.GetService<IConfiguration>();
+            var configuration = host.Services.GetService<IConfiguration>();
             var orchestratorType = configuration.GetValue<string>("OrchestratorType");
 
             return orchestratorType?.ToUpper() == "K8S";
         }
 
-        public static IWebHost MigrateDbContext<TContext>(this IWebHost webHost, Action<TContext, IServiceProvider> seeder) 
+        public static IHost MigrateDbContext<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder) 
             where TContext : DbContext
         {
-            var underK8S = webHost.IsInKubernetes();
+            var underK8S = host.IsInKubernetes();
 
-            using var scope = webHost.Services.CreateScope();
+            using var scope = host.Services.CreateScope();
 
             var serviceProvider = scope.ServiceProvider;
             var logger = serviceProvider.GetRequiredService<ILogger<TContext>>();
@@ -58,7 +59,7 @@ namespace Microsoft.AspNetCore.Hosting
                 if (underK8S) throw;
             }
 
-            return webHost;
+            return host;
         }
 
         private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context,

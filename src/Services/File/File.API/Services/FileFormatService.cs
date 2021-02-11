@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Grpc.Core;
@@ -28,10 +27,10 @@ namespace Harta.Services.File.API.Services
 
         public override async Task<CreateOrderResponse> Format(FormatRequest request, ServerCallContext context)
         {
-            _logger.LogInformation("Begin call from method {method} for filename {filename}",
-                context.Method, request.FileName);
+            _logger.LogInformation("Begin call from method {method} for filename {filename}", context.Method, request.FileName);
 
             var records = await _fileExtract.ReadFileAsync(request.FileName, request.FileType);
+            await _fileExtract.WriteFileAsync(records, request.FileName, true);
 
             var orderRequest = new CreateOrderRequest
             {
@@ -43,12 +42,10 @@ namespace Harta.Services.File.API.Services
 
             _logger.LogDebug("Update order request {@request}", orderRequest);
 
-            using var call = _orderingClient.CreateOrderAsync(
-                orderRequest,
-                cancellationToken: new CancellationTokenSource().Token);
+            using var call = _orderingClient.CreateOrderAsync(orderRequest);
             try
             {
-                var orderResponse = await call.ResponseAsync;
+                var orderResponse = await call;
                 _logger.LogDebug("Order response {@response}", orderResponse);
 
                 return orderResponse;

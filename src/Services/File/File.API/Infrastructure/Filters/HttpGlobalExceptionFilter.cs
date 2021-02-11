@@ -40,7 +40,6 @@ namespace Harta.Services.File.API.Infrastructure.Filters
                 context.HttpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
             }
 
-
             context.ExceptionHandled = true;
         }
     }
