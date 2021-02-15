@@ -22,9 +22,18 @@ namespace Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate
             _quantity = quantity >= 0 ? quantity : throw new OrderingDomainException("Invalid number of quantity.");
         }
 
-        public int GetQuantity()
+        public string GetFGCode() => _fgCode;
+
+        public int GetQuantity() => _quantity;
+
+        public void AddQuantity(int quantity)
         {
-            return _quantity;
+            if (quantity < 0)
+            {
+                throw new OrderingDomainException("Invalid units");
+            }
+
+            _quantity += quantity;
         }
 
         public bool IsEqualTo(string fgCode, string size)

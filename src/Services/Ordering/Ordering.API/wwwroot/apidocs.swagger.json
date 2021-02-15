@@ -47,6 +47,48 @@
           "OrderingService"
         ]
       }
+    },
+    "/orders": {
+      "get": {
+        "operationId": "OrderingService_GetOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/orderingGetOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "customerRef",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ponumber",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "fgcode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "OrderingService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -54,23 +96,19 @@
       "type": "object",
       "properties": {
         "path": {
-          "type": "string",
-          "title": "filename"
+          "type": "string"
         },
         "systemType": {
-          "type": "string",
-          "title": "erp type ex:d365"
+          "type": "string"
         },
         "type": {
-          "$ref": "#/definitions/orderingCreateOrderRequestType",
-          "title": "distinguish part1 and part2 stage"
+          "$ref": "#/definitions/orderingCreateOrderRequestType"
         },
         "orders": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/orderingOrderDTO"
-          },
-          "title": "purchase order object"
+          }
         }
       }
     },
@@ -81,19 +119,27 @@
         "TYPE_P1",
         "TYPE_P2"
       ],
-      "default": "TYPE_INVALID",
-      "title": "p1 for part1 file and p2 for part2 file"
+      "default": "TYPE_INVALID"
     },
     "orderingCreateOrderResponse": {
       "type": "object",
       "properties": {
         "status": {
-          "type": "boolean",
-          "title": "post-execution result"
+          "type": "boolean"
         },
         "message": {
-          "type": "string",
-          "title": "internal message/exception"
+          "type": "string"
+        }
+      }
+    },
+    "orderingGetOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/orderingOrderDTO"
+          }
         }
       }
     },
@@ -116,8 +162,7 @@
             "$ref": "#/definitions/orderingOrderLineDTO"
           }
         }
-      },
-      "title": "po data holder object"
+      }
     },
     "orderingOrderLineDTO": {
       "type": "object",
@@ -132,8 +177,7 @@
           "type": "integer",
           "format": "int32"
         }
-      },
-      "title": "po details data holder object"
+      }
     },
     "protobufAny": {
       "type": "object",

@@ -30,5 +30,10 @@ namespace Harta.Services.Ordering.API.Services
 
             return Task.FromResult(result);
         }
+
+        public override Task<GetOrdersResponse> GetOrders(GetOrdersRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new GetOrdersResponse());
+        }
     }
 }

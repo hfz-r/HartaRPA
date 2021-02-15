@@ -2,11 +2,13 @@
 using System.Data.Common;
 using System.Reflection;
 using Autofac;
+using AutoMapper;
 using Harta.BuildingBlocks.EFIntegrationEventLog;
 using Harta.BuildingBlocks.EFIntegrationEventLog.Services;
 using Harta.BuildingBlocks.EventBus;
 using Harta.BuildingBlocks.EventBus.Abstractions;
 using Harta.BuildingBlocks.EventBusRabbitMQ;
+using Harta.Services.Ordering.API.Infrastructure.AutoMapper;
 using Harta.Services.Ordering.API.Infrastructure.Filters;
 using Harta.Services.Ordering.Infrastructure;
 using Microsoft.AspNetCore.Http;
@@ -56,6 +58,16 @@ namespace Harta.Services.Ordering.API.Extensions
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddAutoMapper(this IServiceCollection services)
+        {
+            var config = new MapperConfiguration(conf => { conf.AddProfile<AutoMapperProfile>(); });
+            AutoMapperConfiguration.Init(config);
+
+            config.AssertConfigurationIsValid();
 
             return services;
         }

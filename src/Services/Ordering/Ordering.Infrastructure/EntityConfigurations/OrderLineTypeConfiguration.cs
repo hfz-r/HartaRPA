@@ -16,7 +16,10 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .Property(o => o.Id)
                 .UseHiLo("orderline-seq", OrderingContext.DefaultSchema);
 
-            #region Common properties
+            #region Private properties
+
+            builder.Property<int>("OrderId")
+                .IsRequired();
 
             builder
                 .Property<string>("_fgCode")

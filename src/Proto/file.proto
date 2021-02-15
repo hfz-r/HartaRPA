@@ -16,9 +16,6 @@ service FileService {
 }
 
 message FormatRequest {
-  // file name from BC
   string file_name = 1;
-
-  // erp type from BC
   string file_type = 2;
 }

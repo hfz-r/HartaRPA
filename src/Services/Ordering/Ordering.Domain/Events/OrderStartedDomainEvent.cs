@@ -8,14 +8,14 @@ namespace Harta.Services.Ordering.Domain.Events
     /// </summary>
     public class OrderStartedDomainEvent : INotification
     {
-        public string OrderId { get; }
-        public string OrderName { get; }
+        public string CustomerId { get; }
+        public string CustomerName { get; }
         public Order Order { get; }
 
-        public OrderStartedDomainEvent(string orderId, string orderName, Order order)
+        public OrderStartedDomainEvent(string customerId, string customerName, Order order)
         {
-            OrderId = orderId;
-            OrderName = orderName;
+            CustomerId = customerId;
+            CustomerName = customerName;
             Order = order;
         }
     }

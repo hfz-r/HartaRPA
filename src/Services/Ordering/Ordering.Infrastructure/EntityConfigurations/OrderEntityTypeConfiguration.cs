@@ -1,5 +1,4 @@
-﻿using System;
-using Harta.Services.Ordering.Domain.AggregatesModel.CustomerAggregate;
+﻿using Harta.Services.Ordering.Domain.AggregatesModel.CustomerAggregate;
 using Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,7 +17,17 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .Property(o => o.Id)
                 .UseHiLo("order-seq", OrderingContext.DefaultSchema);
 
-            #region Common properties
+            #region General properties
+
+            builder.Property(o => o.PONumber)
+                .IsRequired();
+
+            builder.Property(o => o.PODate)
+                .IsRequired();
+
+            #endregion
+
+            #region Private properties
 
             builder
                 .Property<string>("_path")
@@ -26,26 +35,6 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .HasColumnName("Path")
                 .HasMaxLength(200)
                 .IsRequired();
-
-            builder
-                .Property<string>("_customerReference")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("CustomerReference")
-                .IsRequired();
-
-            builder
-                .Property<string>("_poNumber")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("PONumber")
-                .IsRequired();
-
-            builder
-                .Property<DateTime>("_poDate")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("PODate")
-                .IsRequired();
-
-            #endregion
 
             builder
                 .Property<int>("_systemTypeId")
@@ -60,15 +49,17 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .IsRequired();
 
             builder
-                .Property<int?>("_customerId")
+                .Property<int?>("_custId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("CustomerId")
                 .IsRequired(false);
 
-            var navigation = builder.Metadata.FindNavigation(nameof(Order.OrderLines));
-            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
+            #endregion
 
             #region Entity relationship
+
+            var navigation = builder.Metadata.FindNavigation(nameof(Order.OrderLines));
+            navigation.SetPropertyAccessMode(PropertyAccessMode.Field);
 
             builder.HasOne(o => o.SystemType)
                 .WithMany()
@@ -81,7 +72,7 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
             builder.HasOne<Customer>()
                 .WithMany()
                 .IsRequired(false)
-                .HasForeignKey("_customerId");
+                .HasForeignKey("_custId");
 
             #endregion
         }

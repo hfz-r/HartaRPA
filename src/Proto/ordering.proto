@@ -14,38 +14,13 @@ service OrderingService {
       body : "*"
     };
   }
-}
-
-message CreateOrderRequest {
-  // p1 for part1 file and p2 for part2 file
-  enum Type {
-    TYPE_INVALID = 0;
-    TYPE_P1 = 1;
-    TYPE_P2 = 2;
+  rpc GetOrders(GetOrdersRequest) returns (GetOrdersResponse) {
+    option (google.api.http) = {
+      get : "/orders"
+    };
   }
-
-  // filename
-  string path = 1;
-
-  // erp type ex:d365
-  string system_type = 2;
-
-  // distinguish part1 and part2 stage
-  Type type = 3;
-
-  // purchase order object
-  repeated OrderDTO orders = 4;
 }
 
-message CreateOrderResponse {
-  // post-execution result
-  bool status = 1;
-
-  // internal message/exception
-  string message = 2;
-}
-
-// po data holder object
 message OrderDTO {
   string customer_ref = 1;
   string ponumber = 2;
@@ -53,9 +28,33 @@ message OrderDTO {
   repeated OrderLineDTO lines = 4;
 }
 
-// po details data holder object
 message OrderLineDTO {
   string fgcode = 1;
   string size = 2;
   int32 quantity = 3;
 }
+
+message CreateOrderRequest {
+  enum Type {
+    TYPE_INVALID = 0;
+    TYPE_P1 = 1;
+    TYPE_P2 = 2;
+  }
+
+  string path = 1;
+  string system_type = 2;
+  Type type = 3;
+  repeated OrderDTO orders = 4;
+}
+
+message GetOrdersRequest {
+  string ponumber = 1;
+  string fgcode = 2;
+}
+
+message CreateOrderResponse {
+  bool status = 1;
+  string message = 2;
+}
+
+message GetOrdersResponse { repeated OrderDTO orders = 1; }
