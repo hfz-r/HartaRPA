@@ -11,8 +11,8 @@ namespace Harta.Services.Ordering.API.Application.Queries
     public class GetOrdersQuery : IRequest<IPaginate<Order>>
     {
         public GetOrdersRequest Request { get; set; }
-        public int? Limit { get; }
-        public int? Offset { get; }
+        public int? Limit { get; set; }
+        public int? Offset { get; set; } 
     }
 
     public class QueryValidator : AbstractValidator<GetOrdersQuery>

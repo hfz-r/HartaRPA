@@ -24,6 +24,8 @@ namespace Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate
 
         public string GetFGCode() => _fgCode;
 
+        public string GetSize() => _size;
+
         public int GetQuantity() => _quantity;
 
         public void AddQuantity(int quantity)

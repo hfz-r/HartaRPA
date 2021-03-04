@@ -35,10 +35,9 @@
 		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.0.0" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="3.0.0" />
 		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
 		<PackageReference Include="CsvHelper" Version="17.0.1" />
 		<PackageReference Include="FluentValidation.AspNetCore" Version="8.6.0" />
-		<PackageReference Include="Google.Api.Gax.Grpc" Version="3.0.0" />
+		<PackageReference Include="Google.Api.CommonProtos" Version="2.2.0" />
 		<PackageReference Include="Grpc.AspNetCore" Version="2.33.1" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
 		<PackageReference Include="MediatR" Version="7.0.0" />

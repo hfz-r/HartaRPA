@@ -16,6 +16,7 @@ namespace Harta.Services.Ordering.Infrastructure
 
         private IDbContextTransaction _currentTransaction;
 
+        //TODO - remove this
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderLine> OrderLines { get; set; }
         public virtual DbSet<OrderStatus> OrderStatus { get; set; }

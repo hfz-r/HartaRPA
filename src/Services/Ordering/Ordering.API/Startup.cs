@@ -29,7 +29,6 @@ namespace Harta.Services.Ordering.API
                 .AddGrpc(Configuration)
                 .AddApplicationInsights(Configuration)
                 .AddCustomMvc()
-                .AddAutoMapper()
                 .AddCustomHealthCheck(Configuration)
                 .AddCustomDbContext(Configuration)
                 .AddCustomSwagger(Configuration)
