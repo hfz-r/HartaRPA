@@ -16,6 +16,8 @@ COPY ["Services/File/File.UnitTests/File.UnitTests.csproj", "Services/File/File.
 COPY ["Services/Ordering/Ordering.API/Ordering.API.csproj", "Services/Ordering/Ordering.API/"]
 COPY ["Services/Ordering/Ordering.Domain/Ordering.Domain.csproj", "Services/Ordering/Ordering.Domain/"]
 COPY ["Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj", "Services/Ordering/Ordering.Infrastructure/"]
+COPY ["Services/Ordering/Ordering.FunctionalTests/Ordering.FunctionalTests.csproj", "Services/Ordering/Ordering.FunctionalTests/"]
+COPY ["Services/Ordering/Ordering.UnitTests/Ordering.UnitTests.csproj", "Services/Ordering/Ordering.UnitTests/"]
 COPY ["docker-compose.dcproj", ""]
 COPY ["NuGet.config", ""]
 

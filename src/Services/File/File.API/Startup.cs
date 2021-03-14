@@ -2,6 +2,7 @@ using System;
 using Autofac;
 using Harta.BuildingBlocks.EventBusRabbitMQ;
 using Harta.Services.File.API.Extensions;
+using Harta.Services.File.API.Infrastructure.Autofac;
 using Harta.Services.File.API.Infrastructure.Filters;
 using Harta.Services.File.API.Services;
 using Harta.Services.Ordering.Grpc;
@@ -110,8 +111,7 @@ namespace Harta.Services.File.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterType<FileExtractService>().As<IFileExtractService>();
-            //builder.RegisterModule(new AutofacModule());
+            builder.RegisterModule(new ApplicationModule());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

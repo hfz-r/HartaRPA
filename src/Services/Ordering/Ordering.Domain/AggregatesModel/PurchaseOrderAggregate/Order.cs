@@ -9,16 +9,17 @@ namespace Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate
 {
     public class Order : Entity, IAggregateRoot
     {
-        private string _path;
         private int _systemTypeId;
         private int _orderStatusId;
         private int? _custId;
         private readonly List<OrderLine> _orderLines;
 
+        public string Path { get; }
         public string PONumber { get; }
         public DateTime PODate { get; }
         public SystemType SystemType { get; private set; }
         public OrderStatus OrderStatus { get; private set; }
+
         public int? GetCustomerId => _custId;
         public IReadOnlyCollection<OrderLine> OrderLines => _orderLines;
 
@@ -27,24 +28,23 @@ namespace Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate
             _orderLines = new List<OrderLine>();
         }
 
-        public Order(string path, string poNumber, DateTime poDate, int systemTypeId, string customerId,
-            string customerName, int? custId = null) : this()
+        public Order(string path, string poNumber, DateTime poDate, string systemType, string customerRef, int? custId = null) : this()
         {
-            _custId = custId; //entity id ref
-            _path = path;
-            _systemTypeId = systemTypeId;
-            _orderStatusId = OrderStatus.Processed.Id;
+            Path = path;
             PONumber = poNumber;
             PODate = poDate;
+            _custId = custId; //entity id ref
+            _systemTypeId = SystemType.From(systemType).Id;
+            _orderStatusId = OrderStatus.Processed.Id;
 
-            AddOrderStartedDomainEvent(customerId, customerName);
+            AddOrderStartedDomainEvent(customerRef);
         }
 
         #region Private methods
 
-        private void AddOrderStartedDomainEvent(string customerId, string customerName)
+        private void AddOrderStartedDomainEvent(string customerRef)
         {
-            AddDomainEvent(new OrderStartedDomainEvent(customerId, customerName, this));
+            AddDomainEvent(new OrderStartedDomainEvent(customerRef, this));
         }
 
         #endregion
@@ -68,6 +68,8 @@ namespace Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate
                 _orderStatusId = OrderStatus.Duplicated.Id;
             }
         }
+
+        public void SetCustomerId(int id) => _custId = id;
 
         public SystemType GetSystemType() => SystemType.From(_systemTypeId);
 

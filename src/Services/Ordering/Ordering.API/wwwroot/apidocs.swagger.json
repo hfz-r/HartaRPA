@@ -67,12 +67,6 @@
         },
         "parameters": [
           {
-            "name": "customerRef",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "ponumber",
             "in": "query",
             "required": false,

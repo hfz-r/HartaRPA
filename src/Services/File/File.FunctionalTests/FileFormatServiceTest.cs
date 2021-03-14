@@ -17,6 +17,24 @@ namespace File.FunctionalTests
             _testBase.SetUp();
         }
 
+        [Fact]
+        public async Task Formatting_with_grpc()
+        {
+            //Arrange 
+            var expected = new CreateOrderResponse
+            {
+                Status = true,
+                Message = "Ok"
+            };
+            var client = new FileService.FileServiceClient(_testBase.Channel);
+
+            //Act
+            var response = await client.FormatAsync(new FormatRequest { FileName = "D365_PLDT_20201110.csv", FileType = "D365" });
+
+            //Assert
+            Assert.Equal(expected, response);
+        }
+
         [Theory]
         [InlineData("valid")]
         [InlineData("valid.csv")]

@@ -182,8 +182,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
 
             var eventName = @event.GetType().Name;
 
-            _logger.LogTrace("Creating RabbitMQ channel to publish event: {EventId} ({EventName})", @event.Id,
-                eventName);
+            _logger.LogTrace("Creating RabbitMQ channel to publish event: {EventId} ({EventName})", @event.Id, eventName);
 
             // ReSharper disable AccessToDisposedClosure
             using var channel = _persistentConnection.CreateModel();
@@ -202,8 +201,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
 
                 _logger.LogTrace("Publishing event to RabbitMQ: {EventId}", @event.Id);
 
-                channel.BasicPublish(exchange: BrokerName, routingKey: eventName, mandatory: true,
-                    basicProperties: properties, body: body);
+                channel.BasicPublish(exchange: BrokerName, routingKey: eventName, mandatory: true, basicProperties: properties, body: body);
             });
             // ReSharper restore AccessToDisposedClosure
         }

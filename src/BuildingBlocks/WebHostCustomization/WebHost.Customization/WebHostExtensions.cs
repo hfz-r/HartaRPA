@@ -31,8 +31,7 @@ namespace Microsoft.AspNetCore.Hosting
             var context = serviceProvider.GetService<TContext>();
             try
             {
-                logger.LogInformation("Migrating database associated with context {DbContextName}",
-                    typeof(TContext).Name);
+                logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
                 if (underK8S) InvokeSeeder(seeder, context, serviceProvider);
                 else
                 {
@@ -49,13 +48,11 @@ namespace Microsoft.AspNetCore.Hosting
                     retry.Execute(() => InvokeSeeder(seeder, context, serviceProvider));
                 }
 
-                logger.LogInformation("Migrated database associated with context {DbContextName}",
-                    typeof(TContext).Name);
+                logger.LogInformation("Migrated database associated with context {DbContextName}", typeof(TContext).Name);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}",
-                    typeof(TContext).Name);
+                logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);
                 if (underK8S) throw;
             }
 

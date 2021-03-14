@@ -1,18 +1,10 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using AutoMapper;
-using Harta.Services.File.API.Model;
 
 namespace Harta.Services.File.API.Infrastructure.AutoMapper
 {
     public static class AutoMapperExtensions
     {
-        public static TDto ToDto<TDto>(this BaseModel model) where TDto: class
-        {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            return AutoMapperConfiguration.Mapper.Map<TDto>(model);
-        }
-
         public static IMappingExpression<TSource, TDestination> IgnoreAllNonExisting<TSource, TDestination>(
             this IMappingExpression<TSource, TDestination> expression)
         {
@@ -28,6 +20,16 @@ namespace Harta.Services.File.API.Infrastructure.AutoMapper
             }
 
             return expression;
+        }
+
+        public static TDestination Map<TDestination>(this object source)
+        {
+            return AutoMapperConfiguration.Mapper.Map<TDestination>(source);
+        }
+
+        public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
+        {
+            return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
     }
 }

@@ -6,20 +6,15 @@ namespace Ordering.UnitTests.Domain
 {
     public class CustomerAggregateTest
     {
-        public CustomerAggregateTest()
-        {
-        }
-
         [Fact]
         public void Create_customer_success()
         {
             //Arrange    
             var identity = new Guid().ToString();
-            var name = "fakeUser";
             var address = new AddressData().Init();
 
             //Act
-            var fakeCustomer = new Customer(identity, name, address);
+            var fakeCustomer = new Customer(identity, "AX41","D3651", address);
 
             //Assert
             Assert.NotNull(fakeCustomer);
@@ -30,11 +25,10 @@ namespace Ordering.UnitTests.Domain
         {
             //Arrange    
             var identity = string.Empty;
-            var name = "fakeUser";
             var address = new AddressData().Init();
 
             //Act - Assert
-            Assert.Throws<ArgumentNullException>(() => new Customer(identity, name, address));
+            Assert.Throws<ArgumentNullException>(() => new Customer(identity, "AX41", "D3651", address));
         }
     }
 }

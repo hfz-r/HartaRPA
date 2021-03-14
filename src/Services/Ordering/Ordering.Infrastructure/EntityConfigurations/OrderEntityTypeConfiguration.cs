@@ -19,22 +19,19 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
 
             #region General properties
 
-            builder.Property(o => o.PONumber)
-                .IsRequired();
-
-            builder.Property(o => o.PODate)
-                .IsRequired();
+            builder.Property(o => o.Path).IsRequired();
+            builder.Property(o => o.PONumber).IsRequired();
+            builder.Property(o => o.PODate).IsRequired();
 
             #endregion
 
             #region Private properties
 
             builder
-                .Property<string>("_path")
+                .Property<int?>("_custId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("Path")
-                .HasMaxLength(200)
-                .IsRequired();
+                .HasColumnName("CustomerId")
+                .IsRequired(false);
 
             builder
                 .Property<int>("_systemTypeId")
@@ -47,12 +44,6 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("OrderStatusId")
                 .IsRequired();
-
-            builder
-                .Property<int?>("_custId")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("CustomerId")
-                .IsRequired(false);
 
             #endregion
 

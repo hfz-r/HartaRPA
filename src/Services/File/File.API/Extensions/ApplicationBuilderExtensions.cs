@@ -1,5 +1,7 @@
 ﻿using Harta.BuildingBlocks.EventBus.Abstractions;
 using Harta.Services.File.API.Infrastructure.Middleware;
+using Harta.Services.File.API.IntegrationEvents.EventHandling;
+using Harta.Services.File.API.IntegrationEvents.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +20,8 @@ namespace Harta.Services.File.API.Extensions
         public static void UseEventBus(this IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
-            //eventBus.Subscribe<IntegrationEvent, IntegrationEventHandler>(); TODO
+
+            eventBus.Subscribe<OrderStartedIntegrationEvent, OrderStartedIntegrationEventHandler>();
         }
     }
 }

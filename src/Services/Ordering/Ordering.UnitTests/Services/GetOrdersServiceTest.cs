@@ -22,14 +22,14 @@ using static Ordering.UnitTests.FakeData;
 
 namespace Ordering.UnitTests.Services
 {
-    public class OrderingServiceTest
+    public class GetOrdersServiceTest
     {
         private readonly Mock<IMediator> _mediatorMock;
         private readonly Mock<IUnitOfWork> _workerMock;
         private readonly Mock<ILogger<OrderingService>> _loggerMock;
         private readonly Mock<OrderingContext> _orderContextMock;
 
-        public OrderingServiceTest()
+        public GetOrdersServiceTest()
         {
             _mediatorMock = new Mock<IMediator>();
             _workerMock = new Mock<IUnitOfWork>();

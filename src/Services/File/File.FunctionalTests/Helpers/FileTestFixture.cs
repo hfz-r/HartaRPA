@@ -41,11 +41,7 @@ namespace File.FunctionalTests.Helpers
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .ConfigureKestrel(options =>
-                        {
-                            options.Listen(IPAddress.Any, 5001,
-                                listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
-                        })
+                        .ConfigureKestrel(opt => opt.Listen(IPAddress.Any, 5001, _ => _.Protocols = HttpProtocols.Http2))
                         .UseTestServer()
                         .UseStartup<TStartup>();
                 })

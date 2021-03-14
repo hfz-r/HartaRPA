@@ -16,14 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/format/{fileName}": {
+    "/file/format/{fileName}": {
       "get": {
         "operationId": "FileService_Format",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/fileFormatResponse"
+              "$ref": "#/definitions/orderingCreateOrderResponse"
             }
           },
           "default": {
@@ -54,7 +54,7 @@
     }
   },
   "definitions": {
-    "fileFormatResponse": {
+    "orderingCreateOrderResponse": {
       "type": "object",
       "properties": {
         "status": {

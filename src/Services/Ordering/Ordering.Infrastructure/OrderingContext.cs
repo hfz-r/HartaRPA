@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
-using Harta.Services.Ordering.Domain.AggregatesModel.CustomerAggregate;
-using Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate;
 using Harta.Services.Ordering.Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Harta.Services.Ordering.Infrastructure
@@ -15,14 +12,7 @@ namespace Harta.Services.Ordering.Infrastructure
         public const string DefaultSchema = "ordering";
 
         private IDbContextTransaction _currentTransaction;
-
-        //TODO - remove this
-        public virtual DbSet<Order> Orders { get; set; }
-        public virtual DbSet<OrderLine> OrderLines { get; set; }
-        public virtual DbSet<OrderStatus> OrderStatus { get; set; }
-        public virtual DbSet<SystemType> SystemTypes { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
-
+      
         public bool HasActiveTransaction => _currentTransaction != null;
 
         public OrderingContext(DbContextOptions<OrderingContext> options) : base(options)
@@ -89,17 +79,6 @@ namespace Harta.Services.Ordering.Infrastructure
                     _currentTransaction = null;
                 }
             }
-        }
-    }
-
-    public class OrderingContextDesignFactory : IDesignTimeDbContextFactory<OrderingContext>
-    {
-        public OrderingContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<OrderingContext>()
-                .UseSqlServer("Server=.;Initial Catalog=Harta.Services.OrderingDb;Integrated Security=true");
-
-            return new OrderingContext(optionsBuilder.Options);
         }
     }
 }

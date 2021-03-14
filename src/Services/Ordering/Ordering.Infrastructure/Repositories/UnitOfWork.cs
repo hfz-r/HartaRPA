@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Harta.Services.Ordering.Domain.SeedWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +20,7 @@ namespace Harta.Services.Ordering.Infrastructure.Repositories
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public IRepositoryAsync<TEntity> GetRepositoryAsync<TEntity>() where TEntity : class, IAggregateRoot
+        public IRepositoryAsync<TEntity> GetRepositoryAsync<TEntity>() where TEntity : class
         {
             if (_repositories == null) _repositories = new Dictionary<Type, object>();
 

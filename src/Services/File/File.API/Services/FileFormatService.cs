@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Grpc.Core;
 using Harta.Services.File.API.Infrastructure.AutoMapper;
+using Harta.Services.File.API.Infrastructure.Repositories;
 using Harta.Services.File.Grpc;
 using Harta.Services.Ordering.Grpc;
 using Microsoft.Extensions.Logging;
@@ -12,15 +13,18 @@ namespace Harta.Services.File.API.Services
     public class FileFormatService : FileService.FileServiceBase
     {
         private readonly IFileExtractService _fileExtract;
+        private readonly IMappingRepository _mapping;
         private readonly ILogger<FileFormatService> _logger;
         private readonly OrderingService.OrderingServiceClient _orderingClient;
 
         public FileFormatService(
             IFileExtractService fileExtract,
+            IMappingRepository mapping,
             ILogger<FileFormatService> logger,
             OrderingService.OrderingServiceClient orderingClient)
         {
             _fileExtract = fileExtract;
+            _mapping = mapping;
             _logger = logger;
             _orderingClient = orderingClient;
         }
@@ -30,30 +34,28 @@ namespace Harta.Services.File.API.Services
             _logger.LogInformation("Begin call from method {method} for filename {filename}", context.Method, request.FileName);
 
             var records = await _fileExtract.ReadFileAsync(request.FileName, request.FileType);
-            await _fileExtract.WriteFileAsync(records, request.FileName, true);
+            var mapped = await _mapping.MapAsync(records, request.FileName.GetCustomerRef(), request.FileType);
 
-            var orderRequest = new CreateOrderRequest
-            {
-                Path = request.FileName,
-                SystemType = request.FileType,
-                Type = CreateOrderRequest.Types.Type.P1,
-                Orders = {records.Select(x => x.ToDto<OrderDTO>())}
-            };
-
-            _logger.LogDebug("Update order request {@request}", orderRequest);
-
-            using var call = _orderingClient.CreateOrderAsync(orderRequest);
+            await _fileExtract.WriteFileAsync(mapped, request.FileName, request.FileType, true);
+            
             try
             {
-                var orderResponse = await call;
-                _logger.LogDebug("Order response {@response}", orderResponse);
+                _logger.LogInformation("File formatting succeed. Begin to persists the records.");
 
-                return orderResponse;
+                var headers = new Metadata { { "x-requestid", Guid.NewGuid().ToString() } };
+                var orderRequest = new CreateOrderRequest
+                {
+                    Path = request.FileName,
+                    SystemType = request.FileType,
+                    Type = CreateOrderRequest.Types.Type.P1,
+                    Orders = { mapped.Map<IList<OrderDTO>>() }
+                };
+
+                using var call = _orderingClient.CreateOrderAsync(orderRequest, headers);
+                return await call;
             }
             catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
             {
-                _logger.LogWarning("Stream cancelled.");
-
                 throw;
             }
             catch (RpcException ex)

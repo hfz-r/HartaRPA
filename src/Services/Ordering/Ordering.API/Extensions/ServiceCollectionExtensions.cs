@@ -8,6 +8,7 @@ using Harta.BuildingBlocks.EventBus;
 using Harta.BuildingBlocks.EventBus.Abstractions;
 using Harta.BuildingBlocks.EventBusRabbitMQ;
 using Harta.Services.Ordering.API.Infrastructure.Filters;
+using Harta.Services.Ordering.API.Application.IntegrationEvents;
 using Harta.Services.Ordering.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -127,7 +128,7 @@ namespace Harta.Services.Ordering.API.Extensions
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddTransient<IIdentityService>(); TODO
             services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(svc => connection => new IntegrationEventLogService(connection));
-            //services.AddTransient<IOrderingIntegrationEventService>(); TODO
+            services.AddTransient<IOrderingIntegrationEventService, OrderingIntegrationEventService>(); 
             services.AddSingleton<IRabbitMQPersistentConnection>(svc =>
             {
                 var logger = svc.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();

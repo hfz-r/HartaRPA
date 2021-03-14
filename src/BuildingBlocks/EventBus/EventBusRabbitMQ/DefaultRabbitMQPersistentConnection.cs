@@ -114,9 +114,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
                 _connection.ConnectionShutdown += OnConnectionShutdown;
                 _connection.CallbackException += OnCallbackException;
 
-                _logger.LogInformation(
-                    "RabbitMQ Client acquired a persistent connection to '{HostName}' and is subscribed to failure events",
-                    _connection.Endpoint.HostName);
+                _logger.LogInformation("RabbitMQ Client acquired a persistent connection to '{HostName}' and is subscribed to failure events", _connection.Endpoint.HostName);
 
                 return true;
             }

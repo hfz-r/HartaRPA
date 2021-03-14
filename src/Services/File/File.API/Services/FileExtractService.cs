@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Harta.Services.File.API.Infrastructure.Exceptions;
 using IO = System.IO;
@@ -52,25 +53,26 @@ namespace Harta.Services.File.API.Services
 
         #endregion
 
-        public async Task<IList<PurchaseOrder>> ReadFileAsync(string fileName, string systemType)
+        public async Task<IEnumerable<PurchaseOrder>> ReadFileAsync(string fileName, string systemType)
         {
-            var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.SetFileName(_settings));
-
-            if (!IO.File.Exists(csvFile))
-            {
-                _logger.LogWarning("file={file} not exist in the folder={folder}", fileName, _settings.SourceFolder);
-
-                throw new FileDomainException($"{fileName} not exist.");
-            }
-
-            var records = new List<PurchaseOrder>();
-
             try
             {
+                var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.SetFileName(_settings));
+
+                if (!IO.File.Exists(csvFile))
+                {
+                    _logger.LogWarning("file={file} not exist in the folder={folder}", fileName,
+                        _settings.SourceFolder);
+
+                    throw new FileDomainException($"{fileName} not exist.");
+                }
+
+                var records = new List<PurchaseOrder>();
+
                 using var reader = new IO.StreamReader(csvFile);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
                 // configuration
-                csv.Configuration.RegisterClassMap<PurchaseOrderMap>();
+                csv.Configuration.RegisterClassMap<ReaderMap>();
                 csv.Configuration.HeaderValidated = null;
                 csv.Configuration.MissingFieldFound = null;
 
@@ -94,14 +96,21 @@ namespace Harta.Services.File.API.Services
                             UnitOfMeasure = csv.TryGetValue<string>("Unit_of_Measure"),
                             Size = csv.TryGetValue<string>("Size"),
                             MaterialNo = csv.TryGetValue<string>("Material_No"),
-                            Result = csv.TryGetValue<string>("Result")
+                            Result = csv.TryGetValue<string>("Result"),
                         };
 
                         records.Add(record);
                     }
                 }
 
-                return records;
+                var result =
+                    records.Where(rec =>
+                        (!string.IsNullOrEmpty(rec.ItemDescription) || !string.IsNullOrEmpty(rec.ItemNumber)) &&
+                        rec.Quantity != null);
+
+                _logger.LogInformation("CSV file reader ReadFileAsync succeed with result : (@result)", result);
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -111,16 +120,21 @@ namespace Harta.Services.File.API.Services
             }
         }
 
-        public async Task WriteFileAsync(IList<PurchaseOrder> records, string fileName, bool timestamp = false)
+        public async Task WriteFileAsync(IList<PurchaseOrder> records, string fileName, string systemType,
+            bool timestamp = false)
         {
-            var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.SetFileName(_settings).SetTimeStamp(timestamp));
+            if (!records.Any()) throw new ArgumentNullException(nameof(records));
 
             try
             {
+                var csvFile = IO.Path.Combine(_settings.SourceFolder, fileName.SetFileName(_settings).SetTimeStamp(timestamp));
+
+                _logger.LogInformation("Begin to construct mapped results to a new file - {file}", csvFile);
+
                 await using var writer = new IO.StreamWriter(csvFile) {AutoFlush = true};
                 await using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
                 // configuration
-                csv.Configuration.RegisterClassMap<PurchaseOrderMap>();
+                csv.Configuration.RegisterClassMap(new WriterMap(systemType));
 
                 await csv.WriteRecordsAsync(records);
             }
@@ -135,6 +149,13 @@ namespace Harta.Services.File.API.Services
 
     public static class FileExtractExtensions
     {
+        private static DateTime TryParseDateTime(string src)
+        {
+            DateTime.TryParseExact(src, new[] {"dd.MM.yyyy", "dd.M.yyyy"}, CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out var result);
+            return result;
+        }
+
         public static T GetValueOrNull<T>(this string src)
         {
             var type = typeof(T);
@@ -147,6 +168,22 @@ namespace Harta.Services.File.API.Services
         public static T TryGetValue<T>(this IReaderRow reader, string key)
         {
             return FileExtractService.TryGetValue<T>(key, reader);
+        }
+
+        public static string GetCustomerRef(this string fileName)
+        {
+            const string pattern = @"(?<=_)\w+(?=_|\.)";
+
+            var r = new Regex(pattern, RegexOptions.IgnoreCase);
+            var match = r.Match(fileName);
+
+            if (!match.Success) throw new Exception("Unrecognized filename.");
+
+            var customerRef = match.Value.Contains("_")
+                ? match.Value.Split("_")[0]
+                : match.Value;
+
+            return customerRef;
         }
 
         public static string SetFileName(this string fileName, FileSettings settings)
@@ -172,7 +209,7 @@ namespace Harta.Services.File.API.Services
         public static T ChangeType<T>(this string src)
         {
             var convert = typeof(T) == typeof(DateTime)
-                ? DateTime.ParseExact(src, "dd.MM.yyyy", CultureInfo.InvariantCulture)
+                ? TryParseDateTime(src)
                 : Convert.ChangeType(src, typeof(T), CultureInfo.InvariantCulture);
 
             return (T) convert;

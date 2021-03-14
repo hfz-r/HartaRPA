@@ -31,5 +31,4 @@ services:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
     depends_on:
-      - sql-test
       - rabbitmq-test

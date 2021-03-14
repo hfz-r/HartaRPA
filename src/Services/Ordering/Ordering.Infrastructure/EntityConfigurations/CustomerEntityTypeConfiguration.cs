@@ -18,7 +18,7 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
 
             builder.OwnsOne(o => o.Address, a => { a.WithOwner(); });
 
-            #region Common properties
+            #region General properties
 
             builder.Property(b => b.IdentityGuid)
                 .HasMaxLength(200)
@@ -28,20 +28,19 @@ namespace Harta.Services.Ordering.Infrastructure.EntityConfigurations
                 .HasIndex("IdentityGuid")
                 .IsUnique();
 
-            builder.Property(b => b.Name);
+            builder.Property(b => b.AX4Code).IsRequired();
+            builder.Property(b => b.D365Code).IsRequired();
+
+            #endregion
+
+            #region Private properties
 
             builder
-                .Property<string>("_ax4Code")
+                .Property<string>("_name")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("AX4Code")
+                .HasColumnName("Name")
                 .IsRequired();
-
-            builder
-                .Property<string>("_d365Code")
-                .UsePropertyAccessMode(PropertyAccessMode.Field)
-                .HasColumnName("D365Code")
-                .IsRequired();
-
+            
             #endregion
         }
     }

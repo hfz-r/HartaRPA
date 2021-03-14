@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Harta.Services.Ordering.Domain.SeedWork
+namespace Harta.Services.Ordering.Infrastructure.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepositoryAsync<TEntity> GetRepositoryAsync<TEntity>() where TEntity : class, IAggregateRoot;
+        IRepositoryAsync<TEntity> GetRepositoryAsync<TEntity>() where TEntity : class;
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default);
     }

@@ -39,6 +39,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - OrderingUrl=http://ordering-service-test:5001
       - ConnectionString=redis-test
+      - MapperConnectionString=Data Source=host.docker.internal;Initial Catalog=RPA-misc;User ID=sa;Password=p@ssw0rd;
       - EventBusConnection=rabbitmq-test
       - SourceFolder=/media/test
       - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
@@ -53,10 +54,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - ConnectionString=Server=sql-test;Database=OrderingDb;User Id=sa;Password=Pass@word
+      - ConnectionString=Data Source=host.docker.internal;Initial Catalog=Harta.Services.OrderingDb;User ID=sa;Password=p@ssw0rd;
       - EventBusConnection=rabbitmq-test
-      - UseCustomizationData=True
-      - CheckUpdateTime=30000
       - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
       - OrchestratorType=${ORCHESTRATOR_TYPE}
       - UseLoadTest=${USE_LOADTEST:-False}

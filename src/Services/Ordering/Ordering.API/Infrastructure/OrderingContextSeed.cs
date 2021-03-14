@@ -11,6 +11,7 @@ using Harta.Services.Ordering.Domain.AggregatesModel.CustomerAggregate;
 using Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate;
 using Harta.Services.Ordering.Domain.SeedWork;
 using Harta.Services.Ordering.Infrastructure;
+using Harta.Services.Ordering.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,8 +23,7 @@ namespace Harta.Services.Ordering.API.Infrastructure
 {
     public class OrderingContextSeed
     {
-        public async Task SeedAsync(OrderingContext context, IWebHostEnvironment environment,
-            IOptions<OrderingSettings> settings, ILogger<OrderingContextSeed> logger)
+        public async Task SeedAsync(IUnitOfWork worker, IWebHostEnvironment environment, IOptions<OrderingSettings> settings, ILogger<OrderingContextSeed> logger, OrderingContext context)
         {
             var policy = CreatePolicy(logger, nameof(OrderingContextSeed));
 
@@ -32,36 +32,37 @@ namespace Harta.Services.Ordering.API.Infrastructure
                 var useCustomizationData = settings.Value.UseCustomizationData;
                 var contentRootPath = environment.ContentRootPath;
 
-                using (context)
+                var customerRepo = worker.GetRepositoryAsync<Customer>();
+                var orderStatusRepo = worker.GetRepositoryAsync<OrderStatus>();
+                var sysTypeRepo = worker.GetRepositoryAsync<SystemType>();
+
+                await context.Database.MigrateAsync();
+
+                if (!(await customerRepo.GetQueryableAsync()).Any())
                 {
-                    context.Database.Migrate();
+                    await customerRepo.AddAsync(useCustomizationData
+                        ? GetCustomersFromFile(contentRootPath, logger)
+                        : GetPredefinedCustomers());
 
-                    if (!context.Customers.Any())
-                    {
-                        await context.Customers.AddRangeAsync(useCustomizationData
-                            ? GetCustomersFromFile(contentRootPath, logger)
-                            : GetPredefinedCustomers());
+                    await worker.SaveChangesAsync();
+                }
 
-                        await context.SaveChangesAsync();
-                    }
+                if (!(await orderStatusRepo.GetQueryableAsync()).Any())
+                {
+                    await orderStatusRepo.AddAsync(useCustomizationData
+                        ? GetOrderStatusFromFile(contentRootPath, logger)
+                        : GetPredefinedOrderStatus());
 
-                    if (!context.OrderStatus.Any())
-                    {
-                        await context.OrderStatus.AddRangeAsync(useCustomizationData
-                            ? GetOrderStatusFromFile(contentRootPath, logger)
-                            : GetPredefinedOrderStatus());
+                    await worker.SaveChangesAsync();
+                }
 
-                        await context.SaveChangesAsync();
-                    }
+                if (!(await sysTypeRepo.GetQueryableAsync()).Any())
+                {
+                    await sysTypeRepo.AddAsync(useCustomizationData
+                        ? GetSystemTypesFromFile(contentRootPath, logger)
+                        : GetPredefinedSystemTypes());
 
-                    if (!context.SystemTypes.Any())
-                    {
-                        await context.SystemTypes.AddRangeAsync(useCustomizationData
-                            ? GetSystemTypesFromFile(contentRootPath, logger)
-                            : GetPredefinedSystemTypes());
-
-                        await context.SaveChangesAsync();
-                    }
+                    await worker.SaveChangesAsync();
                 }
             });
         }
@@ -72,8 +73,12 @@ namespace Harta.Services.Ordering.API.Infrastructure
         {
             return new[]
             {
-                new Customer(Guid.NewGuid().ToString(), "Hartalega",
-                    new Address("", "Damansara Utama, Petaling Jaya", "Selangor", "", ""), "HART", "HART")
+                new Customer(
+                    Guid.NewGuid().ToString(),
+                    "H001",
+                    "HART",
+                    new Address("109B, Jalan SS 21/1a", "Damansara Utama, Petaling Jaya", "Selangor", "Malaysia", "47400"),
+                    "HARTALEGA")
             };
         }
 
@@ -87,8 +92,7 @@ namespace Harta.Services.Ordering.API.Infrastructure
             return Enumeration.GetAll<SystemType>();
         }
 
-        private IEnumerable<Customer> GetCustomersFromFile(string contentRootPath,
-            ILogger<OrderingContextSeed> logger)
+        private IEnumerable<Customer> GetCustomersFromFile(string contentRootPath, ILogger<OrderingContextSeed> logger)
         {
             string csvFile = Path.Combine(contentRootPath, "Setup", "Customers.csv");
 
@@ -99,10 +103,14 @@ namespace Harta.Services.Ordering.API.Infrastructure
                 using var reader = new StreamReader(csvFile);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
-                var records = csv.GetRecords<CustomerDto>();
+                var records = csv.GetRecords<CustomerDto>().ToList();
                 return records
-                    .SelectTry(x =>
-                        new Customer(Guid.NewGuid().ToString(), x.CustName, null, x.AX4CustCode, x.D365CustCode))
+                    .SelectTry(x => new Customer(
+                        Guid.NewGuid().ToString(),
+                        x.AX4CustCode,
+                        x.D365CustCode,
+                        null,
+                        x.CustName))
                     .OnCaughtException(x =>
                     {
                         logger.LogError(exception: x, "EXCEPTION ERROR: {Message}", x.Message);
@@ -117,8 +125,7 @@ namespace Harta.Services.Ordering.API.Infrastructure
             }
         }
 
-        private IEnumerable<OrderStatus> GetOrderStatusFromFile(string contentRootPath,
-            ILogger<OrderingContextSeed> logger)
+        private IEnumerable<OrderStatus> GetOrderStatusFromFile(string contentRootPath, ILogger<OrderingContextSeed> logger)
         {
             string csvFile = Path.Combine(contentRootPath, "Setup", "OrderStatus.csv");
 
@@ -130,7 +137,7 @@ namespace Harta.Services.Ordering.API.Infrastructure
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
                 int i = 1;
-                var records = csv.GetRecords<OrderStatusDto>();
+                var records = csv.GetRecords<OrderStatusDto>().ToList();
                 return records
                     .SelectTry(x => new OrderStatus(i++, x.OrderStatus))
                     .OnCaughtException(e =>
@@ -147,8 +154,7 @@ namespace Harta.Services.Ordering.API.Infrastructure
             }
         }
 
-        private IEnumerable<SystemType> GetSystemTypesFromFile(string contentRootPath,
-            ILogger<OrderingContextSeed> logger)
+        private IEnumerable<SystemType> GetSystemTypesFromFile(string contentRootPath, ILogger<OrderingContextSeed> logger)
         {
             string csvFile = Path.Combine(contentRootPath, "Setup", "SystemTypes.csv");
 
@@ -160,7 +166,7 @@ namespace Harta.Services.Ordering.API.Infrastructure
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 
                 int i = 1;
-                var records = csv.GetRecords<SystemTypeDto>();
+                var records = csv.GetRecords<SystemTypeDto>().ToList();
                 return records
                     .SelectTry(x => new SystemType(i++, x.SystemType))
                     .OnCaughtException(e =>

@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using Harta.Services.Ordering.Domain.SeedWork;
 using Harta.Services.Ordering.Infrastructure.Paging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Harta.Services.Ordering.Infrastructure.Repositories
 {
-    public class RepositoryAsync<T> : IRepositoryAsync<T> where T : class, IAggregateRoot
+    public class RepositoryAsync<T> : IRepositoryAsync<T> where T : class
     {
         private readonly DbContext _dbContext;
         private readonly DbSet<T> _dbSet;
@@ -25,11 +26,14 @@ namespace Harta.Services.Ordering.Infrastructure.Repositories
         public async Task<T> SingleAsync(
             Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             bool disableTracking = false)
         {
             IQueryable<T> query = _dbSet;
 
             if (disableTracking) query = query.AsNoTracking();
+
+            if (include != null) query = include(query);
 
             if (predicate != null) query = query.Where(predicate);
 
@@ -39,6 +43,7 @@ namespace Harta.Services.Ordering.Infrastructure.Repositories
         public async Task<IPaginate<T>> GetPagedListAsync(
             Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             int index = 0,
             int size = int.MaxValue,
             bool disableTracking = false,
@@ -47,6 +52,8 @@ namespace Harta.Services.Ordering.Infrastructure.Repositories
             IQueryable<T> query = _dbSet;
 
             if (disableTracking) query = query.AsNoTracking();
+
+            if (include != null) query = include(query);
 
             if (predicate != null) query = query.Where(predicate);
 
@@ -59,11 +66,14 @@ namespace Harta.Services.Ordering.Infrastructure.Repositories
             Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IQueryable<T>> queryExp = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             bool disableTracking = false)
         {
             IQueryable<T> query = _dbSet;
 
             if (disableTracking) query = query.AsNoTracking();
+
+            if (include != null) query = include(query);
 
             if (queryExp != null) query = queryExp(query);
 

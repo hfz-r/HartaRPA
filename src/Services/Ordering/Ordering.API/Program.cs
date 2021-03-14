@@ -6,6 +6,7 @@ using Autofac.Extensions.DependencyInjection;
 using Harta.BuildingBlocks.EFIntegrationEventLog;
 using Harta.Services.Ordering.API.Infrastructure;
 using Harta.Services.Ordering.Infrastructure;
+using Harta.Services.Ordering.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +21,7 @@ namespace Harta.Services.Ordering.API
     public class Program
     {
         public static readonly string Namespace = typeof(Program).Namespace;
-        public static readonly string AppName = Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
+        public static readonly string AppName = Namespace[(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1)..];
 
         public static async Task Main(string[] args)
         {
@@ -36,12 +37,13 @@ namespace Harta.Services.Ordering.API
                 Log.Information("Applying migrations ({ApplicationContext})...", AppName);
                 host.MigrateDbContext<OrderingContext>((context, provider) =>
                 {
+                    var worker = provider.GetRequiredService<IUnitOfWork>();
                     var env = provider.GetService<IWebHostEnvironment>();
                     var setting = provider.GetService<IOptions<OrderingSettings>>();
                     var logger = provider.GetService<ILogger<OrderingContextSeed>>();
 
                     new OrderingContextSeed()
-                        .SeedAsync(context, env, setting, logger)
+                        .SeedAsync(worker, env, setting, logger, context)
                         .Wait();
                 }).MigrateDbContext<IntegrationEventLogContext>((_, __) => { });
 

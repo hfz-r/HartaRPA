@@ -31,7 +31,7 @@ namespace File.UnitTests.Services
                 using var reader = new StreamReader(csvFile);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
                 // configuration
-                csv.Configuration.RegisterClassMap<PurchaseOrderMap>();
+                csv.Configuration.RegisterClassMap<ReaderMap>();
 
                 var i = 1;
                 var result = new List<T>();
@@ -57,11 +57,11 @@ namespace File.UnitTests.Services
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            var records = await fileSvc.ReadFileAsync("valid.csv", "AX4");
+            var output = await fileSvc.ReadFileAsync("AX4_D001_DASH 86 20.csv", "AX4");
 
             //Assert
+            var records = output.ToList();
             Assert.True(records.Any() && records.Count > 0);
-            Assert.True(records.Count.Equals(5));
         }
 
         [Fact]
@@ -73,10 +73,12 @@ namespace File.UnitTests.Services
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            var result1 = await fileSvc.ReadFileAsync(spec1[0], "D365");
-            var result2 = await fileSvc.ReadFileAsync(spec1[1], "AX4");
+            var output1 = await fileSvc.ReadFileAsync(spec1[0], "D365");
+            var output2 = await fileSvc.ReadFileAsync(spec1[1], "AX4");
 
             //Assert
+            var result1 = output1.ToList();
+            var result2 = output2.ToList();
             Assert.True(result1.Any() && result2.Any());
             Assert.True(result1.All(x => !string.IsNullOrEmpty(x.ItemDescription) && !string.IsNullOrEmpty(x.Result)));
             Assert.True(result2.All(x => !string.IsNullOrEmpty(x.ItemDescription) && !string.IsNullOrEmpty(x.Result)));
@@ -91,10 +93,13 @@ namespace File.UnitTests.Services
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            var result1 = await fileSvc.ReadFileAsync(spec1[0], "D365");
-            var result2 = await fileSvc.ReadFileAsync(spec1[1], "AX4");
+            var output1 = await fileSvc.ReadFileAsync(spec1[0], "D365");
+            var output2 = await fileSvc.ReadFileAsync(spec1[1], "AX4");
 
             //Assert
+            var result1 = output1.ToList();
+            var result2 = output2.ToList();
+
             Assert.True(result1.Any() && result2.Any());
 
             var cnt1 = result1.Select(x => x.ItemDescription).Count();
@@ -110,9 +115,10 @@ namespace File.UnitTests.Services
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            var result = await fileSvc.ReadFileAsync("invalid_spec3", "D365");
+            var output = await fileSvc.ReadFileAsync("invalid_spec3", "D365");
 
             //Assert
+            var result = output.ToList();
             Assert.True(result.Any() && result.Count == 8);
             Assert.True(result.All(x => !string.IsNullOrEmpty(x.ItemDescription) && x.Quantity != null));
         }
@@ -157,7 +163,7 @@ namespace File.UnitTests.Services
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            await fileSvc.WriteFileAsync(records, csvFile);
+            await fileSvc.WriteFileAsync(records, csvFile, "AX4");
 
             //Assert
             var testRecords = await ReadTestFileAsync<PurchaseOrder>(absCsvFile);
@@ -166,6 +172,26 @@ namespace File.UnitTests.Services
             var expected = testRecords.Where(x => x.PurchaseOrderNumber == "AB222").Select(x => x.Id);
             var actual = records.Where(x => x.CompanyName == "XYZ").Select(x => x.Id);
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async Task Read_write_csv_direct()
+        {
+            //Arrange
+            var fileSettings = new TestFileSettings();
+            var fakeInput = new[] {"AX4_ABOOK.csv", "AX4"};
+
+            //Act
+            var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
+            var output = await fileSvc.ReadFileAsync(fakeInput[0], fakeInput[1]);
+
+            var records = output.ToList();
+            await fileSvc.WriteFileAsync(records, fakeInput[0], fakeInput[1], true);
+
+            //Assert
+            Assert.NotNull(records);
+            Assert.True(records.Count > 0);
+            Assert.Equal("ABOOK", records.Select(x => x.CustomerRef).First());
         }
 
         [Theory]
@@ -182,8 +208,10 @@ namespace File.UnitTests.Services
 
             //Act
             var fileSvc = new FileExtractService(_loggerMock.Object, fileSettings);
-            var records = await fileSvc.ReadFileAsync(fileName, "D365");
-            await fileSvc.WriteFileAsync(records, newFileName);
+            var output = await fileSvc.ReadFileAsync(fileName, "D365");
+
+            var records = output.ToList();
+            await fileSvc.WriteFileAsync(records, newFileName, "D365");
 
             //Assert
             var testRecords = await ReadTestFileAsync<PurchaseOrder>(absCsvFile);

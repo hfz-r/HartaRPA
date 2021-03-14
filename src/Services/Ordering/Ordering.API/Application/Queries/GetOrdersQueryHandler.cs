@@ -3,9 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate;
-using Harta.Services.Ordering.Domain.SeedWork;
 using Harta.Services.Ordering.Infrastructure.Paging;
+using Harta.Services.Ordering.Infrastructure.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Harta.Services.Ordering.API.Application.Queries
@@ -25,8 +26,7 @@ namespace Harta.Services.Ordering.API.Application.Queries
         {
             try
             {
-                _logger.LogTrace("Fetching order queries from database. Handler name: {HandlerName}",
-                    nameof(GetOrdersQueryHandler));
+                _logger.LogInformation("Fetching order queries from database. Handler name: {HandlerName}", nameof(GetOrdersQueryHandler));
 
                 var repository = _worker.GetRepositoryAsync<Order>();
 
@@ -38,7 +38,8 @@ namespace Harta.Services.Ordering.API.Application.Queries
                             q = q.Where(o => o.OrderLines.Any(l => l.GetFGCode() == query.Request.Fgcode));
                         return q;
                     },
-                    orderBy: ob => ob.OrderBy(o => o.PONumber),
+                    orderBy: q => q.OrderBy(o => o.PONumber),
+                    include: q => q.Include(o => o.OrderLines),
                     disableTracking: true
                 );
 

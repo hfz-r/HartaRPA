@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Harta.Services.Ordering.Domain.SeedWork;
 
 namespace Harta.Services.Ordering.Infrastructure.Paging
 {

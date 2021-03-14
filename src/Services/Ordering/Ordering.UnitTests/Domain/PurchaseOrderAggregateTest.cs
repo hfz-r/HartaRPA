@@ -7,10 +7,6 @@ namespace Ordering.UnitTests.Domain
 {
     public class PurchaseOrderAggregateTest
     {
-        public PurchaseOrderAggregateTest()
-        {
-        }
-
         [Fact]
         public void Create_order_line_success()
         {
@@ -84,7 +80,7 @@ namespace Ordering.UnitTests.Domain
 
             //Act
             var fakeOrder = new OrderData().Init();
-            fakeOrder.AddDomainEvent(new OrderStartedDomainEvent("1", "fakeCustomerName", fakeOrder));
+            fakeOrder.AddDomainEvent(new OrderStartedDomainEvent("fakeCustomerName", fakeOrder));
 
             //Assert
             Assert.Equal(fakeOrder.DomainEvents.Count, expectedResult);
@@ -96,7 +92,7 @@ namespace Ordering.UnitTests.Domain
             //Arrange
             var expectedResult = 1;
             var fakeOrder = new OrderData().Init();
-            var @fakeEvent = new OrderStartedDomainEvent("1", "fakeCustomerName", fakeOrder);
+            var @fakeEvent = new OrderStartedDomainEvent("fakeCustomerName", fakeOrder);
 
             //Act
             fakeOrder.AddDomainEvent(@fakeEvent);

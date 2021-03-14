@@ -66,8 +66,6 @@ namespace Harta.Services.File.API.Extensions
             });
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-            //services.AddTransient<IntegrationEventHandler> TODO
         }
     }
 }

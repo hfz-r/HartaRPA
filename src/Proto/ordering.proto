@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package harta.ordering;
 
+option go_package = "harta/ordering";
 option csharp_namespace = "Harta.Services.Ordering.Grpc";
 
 import "google/api/annotations.proto";

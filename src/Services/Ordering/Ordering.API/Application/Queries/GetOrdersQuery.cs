@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Harta.Services.Ordering.API.Application.Validations;
 using Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate;
-using Harta.Services.Ordering.Domain.SeedWork;
 using Harta.Services.Ordering.Grpc;
+using Harta.Services.Ordering.Infrastructure.Paging;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

@@ -30,11 +30,7 @@ namespace Harta.Services.Ordering.Domain.AggregatesModel.PurchaseOrderAggregate
 
         public void AddQuantity(int quantity)
         {
-            if (quantity < 0)
-            {
-                throw new OrderingDomainException("Invalid units");
-            }
-
+            if (quantity < 0) throw new OrderingDomainException("Invalid units");
             _quantity += quantity;
         }
 

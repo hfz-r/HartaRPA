@@ -1,5 +1,6 @@
 using System;
 using Autofac;
+using Harta.Services.Ordering.API.Application.Modules;
 using Harta.Services.Ordering.API.Extensions;
 using Harta.Services.Ordering.API.Services;
 using HealthChecks.UI.Client;
@@ -39,7 +40,8 @@ namespace Harta.Services.Ordering.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //TODO
+            builder.RegisterModule(new MediatorModule());
+            builder.RegisterModule(new ApplicationModule());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

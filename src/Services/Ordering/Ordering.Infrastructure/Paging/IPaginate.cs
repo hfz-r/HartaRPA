@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Harta.Services.Ordering.Domain.SeedWork
+namespace Harta.Services.Ordering.Infrastructure.Paging
 {
     public interface IPaginate<T>
     {

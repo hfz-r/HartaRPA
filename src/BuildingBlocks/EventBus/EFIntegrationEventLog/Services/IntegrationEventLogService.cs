@@ -22,8 +22,16 @@ namespace Harta.BuildingBlocks.EFIntegrationEventLog.Services
 
             _context = new IntegrationEventLogContext(new DbContextOptionsBuilder<IntegrationEventLogContext>()
                 .UseSqlServer(conn).Options);
-            _eventTypes = Assembly.Load(Assembly.GetEntryAssembly().FullName).GetTypes()
-                .Where(x => x.Name.EndsWith(nameof(IntegrationEvent))).ToList();
+
+            _eventTypes =
+#if DEBUG
+                Assembly.Load(Assembly.GetCallingAssembly().FullName)
+#else
+                Assembly.Load(Assembly.GetEntryAssembly().FullName)
+#endif
+                .GetTypes()
+                .Where(x => x.Name.EndsWith(nameof(IntegrationEvent)))
+                .ToList();
         }
 
         #region Private/Protected methods
@@ -52,8 +60,7 @@ namespace Harta.BuildingBlocks.EFIntegrationEventLog.Services
 
         #endregion
 
-        public async Task<IEnumerable<IntegrationEventLogEntry>> RetrieveEventLogsPendingToPublishAsync(
-            Guid transactionId)
+        public async Task<IEnumerable<IntegrationEventLogEntry>> RetrieveEventLogsPendingToPublishAsync(Guid transactionId)
         {
             var tid = transactionId.ToString();
 
