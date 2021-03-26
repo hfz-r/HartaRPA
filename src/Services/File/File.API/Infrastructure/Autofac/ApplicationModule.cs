@@ -6,7 +6,7 @@ using Harta.BuildingBlocks.EventBus.Abstractions;
 using Harta.Services.File.API.Infrastructure.Repositories;
 using Harta.Services.File.API.IntegrationEvents.Events;
 using Harta.Services.File.API.Services;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Module = Autofac.Module;
 
 namespace Harta.Services.File.API.Infrastructure.Autofac
@@ -19,9 +19,8 @@ namespace Harta.Services.File.API.Infrastructure.Autofac
             builder.RegisterType<FileRepository>().As<IFileRepository>(); //redis provider transient reg.
             builder.Register(context =>
                 {
-                    var configuration = context.Resolve<IConfiguration>();
-                    var connStr = configuration.GetValue<string>("MapperConnectionString");
-                    return new SqlConnection(connStr);
+                    var connStr = context.Resolve<IOptions<ConnectionStrings>>().Value;
+                    return new SqlConnection(connStr.MappingSvcConnStr);
                 })
                 .As<IDbConnection>();
             builder.RegisterType<MappingRepository>().As<IMappingRepository>().InstancePerLifetimeScope();

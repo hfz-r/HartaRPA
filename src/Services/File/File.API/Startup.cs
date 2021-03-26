@@ -48,7 +48,6 @@ namespace Harta.Services.File.API
                     options.Filters.Add<HttpGlobalExceptionFilter>();
                     options.Filters.Add<ValidateModelStateFilter>();
                 })
-                //AddApplicationPart() TODO
                 .AddNewtonsoftJson();
             services.AddSwaggerGen(options =>
             {
@@ -64,11 +63,11 @@ namespace Harta.Services.File.API
             //services.AddAuthService(); TODO
             services.AddAutoMapper();
             services.AddCustomHealthCheck(Configuration);
-            services.Configure<FileSettings>(Configuration);
-            services.AddSingleton(svc =>
+            services.AddCustomConfiguration(Configuration);
+            services.AddSingleton<IConnectionMultiplexer>(svc =>
             {
-                var settings = svc.GetRequiredService<IOptions<FileSettings>>().Value;
-                var conf = ConfigurationOptions.Parse(settings.ConnectionString, true);
+                var connStr = svc.GetRequiredService<IOptions<ConnectionStrings>>().Value;
+                var conf = ConfigurationOptions.Parse(connStr.IntegrationEventConnStr, true);
                 conf.ResolveDns = true;
 
                 return ConnectionMultiplexer.Connect(configuration: conf);
@@ -106,7 +105,6 @@ namespace Harta.Services.File.API
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Repository TODO
             //IdentityService TODO
-            services.AddOptions();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

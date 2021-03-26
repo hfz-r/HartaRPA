@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: rabbitmq
+  pullPolicy: IfNotPresent
+  tag: 3-management
+
+service:
+  type: ClusterIP
+  port: 5672
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

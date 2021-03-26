@@ -38,13 +38,20 @@ namespace Harta.Services.File.API.Extensions
 
             builder.AddCheck("self", () => HealthCheckResult.Healthy());
             builder.AddRedis(
-                configuration["ConnectionString"],
+                configuration["ConnectionStrings:IntegrationEventConnStr"],
                 name: "redis-check",
                 tags: new[] {"redis"});
             builder.AddRabbitMQ(
                 $"amqp://{configuration["EventBusConnection"]}",
                 name: "file-rabbitmqbus-check",
                 tags: new[] {"rabbitmqbus"});
+        }
+
+        public static void AddCustomConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddOptions();
+            services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
+            services.Configure<FileSettings>(configuration);
         }
 
         public static void AddEventBus(this IServiceCollection services, IConfiguration configuration)

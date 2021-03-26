@@ -8,10 +8,6 @@ services:
     ports:
       - "5433:1433"
 
-  nosql-test:
-    ports:
-      - "27017:27017"
-
   redis-test:
     ports:
       - "6379:6379"
@@ -29,7 +25,7 @@ services:
       - "8443:443"
       - "8001:8001"
     volumes: 
-      - ./Proto/proto.pb:/tmp/envoy/proto.pb
+      - ./Proto/proto.pb:/etc/proto/proto.pb
       - ./ApiGateways/Envoy/test/envoy.yaml:/etc/envoy/envoy.yaml
       - ./ApiGateways/Envoy/ssl:/etc/ssl/certs
 
@@ -37,13 +33,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ORCHESTRATOR_TYPE=${ORCHESTRATOR_TYPE}
       - OrderingUrl=http://ordering-service-test:5001
-      - ConnectionString=redis-test
-      - MapperConnectionString=Data Source=host.docker.internal;Initial Catalog=RPA-misc;User ID=sa;Password=p@ssw0rd;
+      - ConnectionStrings__IntegrationEventConnStr=redis-test
+      - ConnectionStrings__MappingSvcConnStr=Data Source=host.docker.internal;Initial Catalog=RPA-misc;User ID=sa;Password=p@ssw0rd;
       - EventBusConnection=rabbitmq-test
       - SourceFolder=/media/test
       - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
-      - OrchestratorType=${ORCHESTRATOR_TYPE}
       - UseLoadTest=${USE_LOADTEST:-False}
     volumes: 
       - /c/Users/hafiz.roslan.HARTALEGA/Documents/RPA/Projects/HartaRPA/tests:/media/test
@@ -54,10 +50,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
+      - ORCHESTRATOR_TYPE=${ORCHESTRATOR_TYPE}
       - ConnectionString=Data Source=host.docker.internal;Initial Catalog=Harta.Services.OrderingDb;User ID=sa;Password=p@ssw0rd;
       - EventBusConnection=rabbitmq-test
       - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
-      - OrchestratorType=${ORCHESTRATOR_TYPE}
       - UseLoadTest=${USE_LOADTEST:-False}
     ports:
       - "5112:80"

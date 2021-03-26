@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.localDb.name }}
+  labels:
+    {{- include "file-api.labels" . | nindent 4 }}
+spec:
+  type: ExternalName
+  externalName: {{ .Values.localDb.address }}
+  ports:
+    - name: port
+      port: {{ .Values.localDb.port }}

@@ -6,12 +6,21 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "5340:80"
-    
-  redis:
+
+  sql-data:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+
+  redis-data:
     ports:
       - "6379:6379"
     volumes:
-      - filedata:/data
+      - redis-data:/data
       
   rabbitmq:
     ports:
@@ -26,31 +35,63 @@ services:
       - "8443:443"
       - "8001:8001"
     volumes: 
-      - ./Proto/proto.pb:/tmp/envoy
+      - ./Proto/proto.pb:/etc/envoy
       - ./ApiGateways/Envoy/envoy.yaml:/etc/envoy
-      - ./ApiGateways/Envoy/ssl:/etc/ssl/certs
+      - ./ApiGateways/Envoy/ssl:/etc/envoy/tls
 
   file-service:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - OrderingUrl=http://ordering-service
-      - PATH_BASE=/file-svc
+      - ORCHESTRATOR_TYPE=${ORCHESTRATOR_TYPE}
+      - PATH_BASE=/file-api
       - GRPC_PORT=81
       - PORT=80
+      - OrderingUrl=http://ordering-service
+      - ConnectionStrings__IntegrationEventConnStr=redis-data
+      - ConnectionStrings__MappingSvcConnStr=Data Source=host.docker.internal;Initial Catalog=RPA-misc;User ID=sa;Password=p@ssw0rd;
+      - EventBusConnection=rabbitmq
+      - SourceFolder=/media/filesrc
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      - UseLoadTest=${USE_LOADTEST:-False}
+    volumes: 
+      - /c/Users/hafiz.roslan.HARTALEGA/Documents/RPA/Projects/HartaRPA/tests:/media/filesrc
     ports:
-      - "80"
-      - "5101:443"
+      - "5111:80"
       - "9101:81"
 
-  # ordering.api:
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #   ports:
-  #     - "80"
-  #   volumes:
-  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  ordering-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ORCHESTRATOR_TYPE=${ORCHESTRATOR_TYPE}
+      - PATH_BASE=/ordering-api
+      - GRPC_PORT=81
+      - PORT=80
+      - ConnectionString=Server=sqldata;Database=ORDERING_DB;User Id=sa;Password=Pass@word;
+      - EventBusConnection=rabbitmq
+      - UseCustomizationData=True
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+      - UseLoadTest=${USE_LOADTEST:-False}
+    ports:
+      - "5112:80"
+      - "9102:81"      
+
+  webstatus:
+    environment: 
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ORCHESTRATOR_TYPE=${ORCHESTRATOR_TYPE}
+      - HealthChecksUI__HealthChecks__0__Name=File HTTP Check
+      - HealthChecksUI__HealthChecks__0__Uri=http://file-service/hc
+      - HealthChecksUI__HealthChecks__1__Name=Ordering HTTP Check
+      - HealthChecksUI__HealthChecks__1__Uri=http://ordering-service/hc
+      - ApplicationInsights__InstrumentationKey=${INSTRUMENTATION_KEY}
+    ports: 
+      - "5100:80"
 
 volumes:
-  filedata:
+  sql-data:
+    external: false
+  redis-data:
     external: false

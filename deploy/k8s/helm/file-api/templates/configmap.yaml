@@ -1,0 +1,21 @@
+{{- $protocol := include "file-api.protocol" . -}}
+{{- $sqlext := include "file-api.sqlExt" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "file-api.fullname" . }}-config
+  labels:
+    {{- include "file-api.labels" . | nindent 4 }}
+data:
+{{- with .Values.common }}
+  ApplicationInsights__InstrumentationKey: {{ .infra.appInsights.key | quote }}
+  ConnectionStrings__IntegrationEventConnStr: {{ .infra.redis.connStr }}
+  {{- with $.Values.localDb }}
+  ConnectionStrings__MappingSvcConnStr: Server={{ $sqlext }};Initial Catalog={{ .db }};User Id={{ .user }};Password={{ .pwd }};
+  {{- end }}
+  EventBusConnection: {{ .infra.eventbus.connStr }}
+  OrderingUrl: {{ $protocol }}://{{ .service.ordering }}
+  SourceFolder: {{ $.Values.env.assetsPath }}
+  UseLoadTest: {{ .infra.misc.useLoadTest | quote }}
+{{- end }}

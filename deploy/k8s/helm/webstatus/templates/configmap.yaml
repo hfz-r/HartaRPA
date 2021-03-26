@@ -1,0 +1,16 @@
+{{- $protocol := include "webstatus.protocol" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "webstatus.fullname" . }}-config
+  labels:
+    {{- include "webstatus.labels" . | nindent 4 }}
+data:
+{{- with .Values.common }}
+  ApplicationInsights__InstrumentationKey: {{ .infra.appInsights.key | quote }}
+  HealthChecksUI__HealthChecks__0__Name: File HTTP Check
+  HealthChecksUI__HealthChecks__0__Uri: {{ $protocol }}://{{ .service.file }}/hc
+  HealthChecksUI__HealthChecks__1__Name: Ordering HTTP Check
+  HealthChecksUI__HealthChecks__1__Uri: {{ $protocol }}://{{ .service.ordering }}/hc
+{{- end }}

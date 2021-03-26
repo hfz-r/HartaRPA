@@ -1,0 +1,25 @@
+# values that defines app-based settings
+common:
+  infra:
+    appInsights:
+      key: ""                     # Application Insights instrumentation key
+    eventbus:
+      connStr: rabbitmq           # RabbitMQ connection string
+    misc:                         # infrastructure others configuration
+      useLoadTest: false          # load test selector
+    redis:
+      connStr: redis-data         # Redis connection string > File API
+    sqlsrv:
+      connStr: sql-data              # k8s service for initial MS-SQL
+      user: sa
+      pwd: Pass@word
+      pid: Developer
+      ordering:   
+        db: OrderingDb            # Ordering API domain db
+    tls:
+      enabled: false              # TLS selector
+      issuer: ""                  # cert-manager issuer 
+  service:
+    apigateway: envoy-proxy
+    file: file-api
+    ordering: ordering-api

@@ -108,7 +108,7 @@ namespace Harta.Services.File.API.Services
                         (!string.IsNullOrEmpty(rec.ItemDescription) || !string.IsNullOrEmpty(rec.ItemNumber)) &&
                         rec.Quantity != null);
 
-                _logger.LogInformation("CSV file reader ReadFileAsync succeed with result : (@result)", result);
+                _logger.LogInformation("CSV file reader ReadFileAsync succeed with result : ({@CsvReader})", result);
 
                 return result;
             }

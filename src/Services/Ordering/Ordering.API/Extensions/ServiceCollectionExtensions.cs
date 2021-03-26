@@ -41,11 +41,8 @@ namespace Harta.Services.Ordering.API.Extensions
 
         public static IServiceCollection AddCustomMvc(this IServiceCollection services)
         {
-            services.AddControllers(options =>
-                {
-                    options.Filters.Add(typeof(HttpGlobalExceptionFilter));
-                })
-                //AddApplicationPart() TODO
+            services
+                .AddControllers(options => { options.Filters.Add(typeof(HttpGlobalExceptionFilter)); })
                 .AddNewtonsoftJson();
 
             services.AddCors(options =>

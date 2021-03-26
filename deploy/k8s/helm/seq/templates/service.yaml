@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seq.fullname" . }}
+  labels:
+    {{- include "seq.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: ui
+      protocol: TCP
+      name: ui
+    - port: {{ .Values.service.ingestPort }}
+      targetPort: ingestion
+      protocol: TCP
+      name: ingestion
+  selector:
+    {{- include "seq.selectorLabels" . | nindent 4 }}

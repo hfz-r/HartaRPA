@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "file-api.fullname" . }}
+  labels:
+    {{- include "file-api.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "file-api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "file-api.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.hostAlias }}
+      hostAliases:
+      - ip: {{ .ip }}
+        hostnames:
+          - {{ .hostname }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "file-api.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+            - name: grpc
+              containerPort: {{ .Values.service.grpcPort }}
+              protocol: TCP       
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: {{ default "Development" .Values.env.dotNetCoreEnv | quote }}
+            - name: ORCHESTRATOR_TYPE 
+              value: {{ default "K8S" .Values.env.orchestratorType | quote }}
+            - name: PATH_BASE
+              value: {{ .Values.pathBase }}       
+            - name: PORT
+              value: {{ .Values.service.port | quote }}
+            - name: GRPC_PORT
+              value: {{ .Values.service.grpcPort | quote }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "file-api.fullname" . }}-config     
+          {{- with .Values.probes.liveness  }}
+          livenessProbe:
+            httpGet: 
+              path: {{ .path }}
+              port: {{ .port }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+          {{- end }}
+          {{- with .Values.probes.readiness  }}
+          readinessProbe:
+            httpGet:
+              path: {{ .path }}
+              port: {{ .port }}
+            initialDelaySeconds: {{ .initialDelaySeconds }}
+            periodSeconds: {{ .periodSeconds }}
+            timeoutSeconds: {{ .timeoutSeconds }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: filesrc
+              mountPath: {{ .Values.env.assetsPath }}
+      volumes:
+        - name: filesrc
+          hostPath: 
+            path: {{ required "env.hostPath is required!" .Values.env.hostPath }}
+            type: DirectoryOrCreate 
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

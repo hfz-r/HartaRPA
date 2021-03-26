@@ -2,8 +2,13 @@
 {
     public class FileSettings
     {
-        public string ConnectionString { get; set; }
         public string SourceFolder { get; set; }
         public string FileExtension { get; set; }
+    }
+
+    public class ConnectionStrings
+    {
+        public string IntegrationEventConnStr { get; set; }
+        public string MappingSvcConnStr { get; set; }
     }
 }

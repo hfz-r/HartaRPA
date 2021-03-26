@@ -1,0 +1,15 @@
+{{- $sqlsrv := include "ordering-api.sqlName" . -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ordering-api.fullname" . }}-config
+  labels:
+    {{- include "ordering-api.labels" . | nindent 4 }}
+data:
+{{- with .Values.common }}
+  ApplicationInsights__InstrumentationKey: {{ .infra.appInsights.key | quote }}
+  ConnectionString: Server={{ $sqlsrv }};Initial Catalog={{ .infra.sqlsrv.ordering.db }};User Id={{ .infra.sqlsrv.user }};Password={{ .infra.sqlsrv.pwd }};
+  EventBusConnection: {{ .infra.eventbus.connStr }}
+  UseLoadTest: {{ .infra.misc.useLoadTest | quote }}
+{{- end }}

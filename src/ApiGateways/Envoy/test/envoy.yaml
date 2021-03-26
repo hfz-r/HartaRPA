@@ -24,7 +24,7 @@ static_resources:
           - name: envoy.filters.http.grpc_json_transcoder
             typed_config: 
               "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
-              proto_descriptor: "/tmp/envoy/proto.pb"
+              proto_descriptor: "/etc/proto/proto.pb"
               services: ["harta.file.FileService","harta.ordering.OrderingService"]
               print_options: 
                 add_whitespace: true
@@ -56,7 +56,7 @@ static_resources:
           - name: envoy.filters.http.grpc_json_transcoder
             typed_config: 
               "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
-              proto_descriptor: "/tmp/envoy/proto.pb"
+              proto_descriptor: "/etc/proto/proto.pb"
               services: ["harta.file.FileService","harta.ordering.OrderingService"]
               print_options: 
                 add_whitespace: true

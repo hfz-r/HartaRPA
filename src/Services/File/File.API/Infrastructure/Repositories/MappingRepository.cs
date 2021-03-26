@@ -92,7 +92,7 @@ WHERE [CUSTOMER_CODE_({systemType})] = @customerRef";
                         x => !string.IsNullOrEmpty(x.CustomerRef) && !string.IsNullOrEmpty(x.FgCode))
                     .ToList();
 
-            _logger.LogInformation("Mapping records succeed MapAsync with result : ({mapped})", mapped);
+            _logger.LogInformation("Mapping records succeed MapAsync with result : ({@CsvMapped})", mapped);
 
             return mapped;
         }

@@ -14,7 +14,7 @@ namespace Microsoft.AspNetCore.Hosting
         public static bool IsInKubernetes(this IHost host)
         {
             var configuration = host.Services.GetService<IConfiguration>();
-            var orchestratorType = configuration.GetValue<string>("OrchestratorType");
+            var orchestratorType = configuration.GetValue<string>("ORCHESTRATOR_TYPE");
 
             return orchestratorType?.ToUpper() == "K8S";
         }

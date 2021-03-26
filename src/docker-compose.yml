@@ -4,7 +4,10 @@ services:
   seq:
     image: datalust/seq:latest
 
-  redis:
+  sql-data:
+    image: mcr.microsoft.com/mssql/server:2017-latest 
+
+  redis-data:
     image: redis:alpine
 
   rabbitmq:
@@ -19,11 +22,20 @@ services:
       context: .
       dockerfile: Services/File/File.API/Dockerfile
     depends_on:
-      - redis
+      - redis-data
       - rabbitmq
 
-  # ordering.api:
-  #   image: ${DOCKER_REGISTRY-}orderingapi
-  #   build:
-  #     context: .
-  #     dockerfile: Services/Ordering/Ordering.API/Dockerfile
+  ordering-service:
+    image: ${REGISTRY:-harta}/ordering-service:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+    depends_on:
+      - sql-data
+      - rabbitmq
+
+  webstatus:
+    image: ${REGISTRY:-harta}/webstatus:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Client/WebStatus/Dockerfile

@@ -4,9 +4,6 @@ services:
   sql-test:
     image: mcr.microsoft.com/mssql/server:2017-latest
 
-  nosql-test:
-    image: mongo
-
   redis-test:
     image: redis:alpine
 

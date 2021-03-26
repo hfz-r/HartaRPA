@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Polly;
-using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
@@ -57,8 +56,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
 
             var channel = _persistentConnection.CreateModel();
             channel.ExchangeDeclare(exchange: BrokerName, type: "direct");
-            channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false,
-                arguments: null);
+            channel.QueueDeclare(queue: _queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
             channel.CallbackException += (sender, args) =>
             {
                 _logger.LogWarning(args.Exception, "Recreating RabbitMQ consumer channel");
@@ -105,7 +103,10 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
             {
                 var consumer = new AsyncEventingBasicConsumer(_consumerChannel);
                 consumer.Received += OnConsumerReceived;
+
+                _consumerChannel.BasicConsume(queue: _queueName, autoAck: false, consumer: consumer);
             }
+            else _logger.LogError("StartBasicConsume can't call on _consumerChannel == null");
         }
 
         private async Task OnConsumerReceived(object sender, BasicDeliverEventArgs args)
@@ -140,8 +141,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
                 {
                     if (subscription.IsDynamic)
                     {
-                        if (!(scope.ResolveOptional(subscription.HandlerType)
-                            is IDynamicIntegrationEventHandler handler)) continue;
+                        if (!(scope.ResolveOptional(subscription.HandlerType) is IDynamicIntegrationEventHandler handler)) continue;
                         dynamic eventData = JObject.Parse(message);
 
                         await Task.Yield();
@@ -157,7 +157,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
                         var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
 
                         await Task.Yield();
-                        await (Task) concreteType.GetMethod("Handle").Invoke(handler, new[] {integrationEvent});
+                        await (Task) concreteType.GetMethod("Handle")?.Invoke(handler, new[] {integrationEvent});
                     }
                 }
             }
@@ -170,7 +170,7 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
         {
             if (!_persistentConnection.IsConnected) _persistentConnection.TryConnect();
 
-            var policy = RetryPolicy.Handle<BrokerUnreachableException>()
+            var policy = Policy.Handle<BrokerUnreachableException>()
                 .Or<SocketException>()
                 .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (ex, time) =>
@@ -206,40 +206,40 @@ namespace Harta.BuildingBlocks.EventBusRabbitMQ
             // ReSharper restore AccessToDisposedClosure
         }
 
-        public void SubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
+        public void SubscribeDynamic<Th>(string eventName) where Th : IDynamicIntegrationEventHandler
         {
             _logger.LogInformation("Subscribing to dynamic event {EventName} with {EventHandler}", eventName,
-                typeof(TH).GetGenericTypeName());
+                typeof(Th).GetGenericTypeName());
 
             DoInternalSubscription(eventName);
-            _subsManager.AddDynamicSubscription<TH>(eventName);
+            _subsManager.AddDynamicSubscription<Th>(eventName);
             StartBasicConsume();
         }
 
-        public void Subscribe<T, TH>() where T : IntegrationEvent where TH : IIntegrationEventHandler<T>
+        public void Subscribe<T, Th>() where T : IntegrationEvent where Th : IIntegrationEventHandler<T>
         {
             var eventName = _subsManager.GetEventKey<T>();
             DoInternalSubscription(eventName);
 
             _logger.LogInformation("Subscribing to event {EventName} with {EventHandler}", eventName,
-                typeof(TH).GetGenericTypeName());
+                typeof(Th).GetGenericTypeName());
 
-            _subsManager.AddSubscription<T, TH>();
+            _subsManager.AddSubscription<T, Th>();
             StartBasicConsume();
         }
 
-        public void Unsubscribe<T, TH>() where T : IntegrationEvent where TH : IIntegrationEventHandler<T>
+        public void Unsubscribe<T, Th>() where T : IntegrationEvent where Th : IIntegrationEventHandler<T>
         {
             var eventName = _subsManager.GetEventKey<T>();
 
             _logger.LogInformation("Unsubscribing from event {EventName}", eventName);
 
-            _subsManager.RemoveSubscription<T, TH>();
+            _subsManager.RemoveSubscription<T, Th>();
         }
 
-        public void UnsubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
+        public void UnsubscribeDynamic<Th>(string eventName) where Th : IDynamicIntegrationEventHandler
         {
-            _subsManager.RemoveDynamicSubscription<TH>(eventName);
+            _subsManager.RemoveDynamicSubscription<Th>(eventName);
         }
 
         public void Dispose()

@@ -16,19 +16,16 @@ static_resources:
             - name: local_service
               domains: ["*"]
               routes:
-              # - match:
-              #     prefix: "/"
-              #   redirect:
-              #     path_redirect: "/"
-              #     https_redirect: true
               - match: { prefix: "/harta.file.FileService" }
                 route: { cluster: file_service, timeout: { seconds: 60 } }
+              - match: { prefix: "/harta.ordering.OrderingService" }
+                route: { cluster: ordering_service, timeout: { seconds: 60 } }
           http_filters:
           - name: envoy.filters.http.grpc_json_transcoder
             typed_config: 
               "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
-              proto_descriptor: "/tmp/envoy/proto.pb"
-              services: ["harta.file.FileService"]
+              proto_descriptor: "/etc/proto/proto.pb"
+              services: ["harta.file.FileService","harta.ordering.OrderingService"]
               print_options: 
                 add_whitespace: true
                 always_print_primitive_fields: true
@@ -53,12 +50,14 @@ static_resources:
               routes:
               - match: { prefix: "/harta.file.FileService" }
                 route: { cluster: file_service, timeout: { seconds: 60 } }
+              - match: { prefix: "/harta.ordering.OrderingService" }
+                route: { cluster: ordering_service, timeout: { seconds: 60 } }
           http_filters:
           - name: envoy.filters.http.grpc_json_transcoder
             typed_config: 
               "@type": type.googleapis.com/envoy.extensions.filters.http.grpc_json_transcoder.v3.GrpcJsonTranscoder
-              proto_descriptor: "/tmp/envoy/proto.pb"
-              services: ["harta.file.FileService"]
+              proto_descriptor: "/etc/proto/proto.pb"
+              services: ["harta.file.FileService","harta.ordering.OrderingService"]
               print_options: 
                 add_whitespace: true
                 always_print_primitive_fields: true
@@ -89,6 +88,20 @@ static_resources:
             address:
               socket_address:
                 address: file-service
+                port_value: 81
+  - name: ordering_service
+    connect_timeout: 0.25s
+    type: logical_dns
+    lb_policy: round_robin
+    http2_protocol_options: {}
+    load_assignment:
+      cluster_name: cluster_0
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: ordering-service
                 port_value: 81
 admin:
   access_log_path: /tmp/admin_access.log
