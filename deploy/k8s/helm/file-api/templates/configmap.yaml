@@ -15,7 +15,7 @@ data:
   ConnectionStrings__MappingSvcConnStr: Server={{ $sqlext }};Initial Catalog={{ .db }};User Id={{ .user }};Password={{ .pwd }};
   {{- end }}
   EventBusConnection: {{ .infra.eventbus.connStr }}
-  OrderingUrl: {{ $protocol }}://{{ .service.ordering }}
+  OrderingUrl: {{ $protocol }}://{{ .service.ordering }}:{{ $.Values.service.grpcPort }}
   SourceFolder: {{ $.Values.env.assetsPath }}
   UseLoadTest: {{ .infra.misc.useLoadTest | quote }}
 {{- end }}

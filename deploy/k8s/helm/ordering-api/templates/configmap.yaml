@@ -11,5 +11,6 @@ data:
   ApplicationInsights__InstrumentationKey: {{ .infra.appInsights.key | quote }}
   ConnectionString: Server={{ $sqlsrv }};Initial Catalog={{ .infra.sqlsrv.ordering.db }};User Id={{ .infra.sqlsrv.user }};Password={{ .infra.sqlsrv.pwd }};
   EventBusConnection: {{ .infra.eventbus.connStr }}
+  UseCustomizationData: {{ $.Values.env.useCustomizationData | quote }}
   UseLoadTest: {{ .infra.misc.useLoadTest | quote }}
 {{- end }}

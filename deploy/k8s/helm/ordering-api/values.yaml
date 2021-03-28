@@ -85,7 +85,7 @@ pathBase: /ordering-api
 env:
   dotNetCoreEnv: ""
   orchestratorType: ""
-  useCustomizationData: false
+  useCustomizationData: true
 
 probes:
   liveness:

@@ -19,7 +19,7 @@ Parameters:
     Specifies options to start cleaning previous build (default: false).
   --debug <debug with --dry-run and --debug >
     Specifies options to debug Helm charts before initial deploy (default: false).
-  --infrastructure <install infrastructure>
+  --infra | --infrastructure <install infrastructure>
     Specifies options to deploy infrastructure resources (default: false).
 #########################################################################################################
 END
@@ -59,7 +59,7 @@ while [[ $# -gt 0 ]]; do
     debug='--debug --dry-run'
     shift
     ;;
-  --infrastructure)
+  --infra | --infrastructure)
     infrastructure='true'
     shift
     ;;
@@ -76,7 +76,7 @@ if [[ $build_images ]]; then
   docker-compose -p ../../.. -f ../../../src/docker-compose.yml build
 
   # Remove temporary images
-  docker rmi --force "$(docker images -qf "dangling=true")"
+  docker rmi "$(docker images -qf "dangling=true")"
 fi
 
 if [[ $clean ]]; then

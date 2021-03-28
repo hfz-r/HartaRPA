@@ -95,9 +95,8 @@ localDb:
   pwd: p@ssw0rd
 
 env:
-  assetsPath: /media/filesrc
+  assetsPath: /media/src
   dotNetCoreEnv: ""
-  hostPath: "/mnt/c/Users/hafiz.roslan.HARTALEGA/Desktop/po"
   orchestratorType: ""
 
 probes:

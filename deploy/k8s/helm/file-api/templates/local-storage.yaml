@@ -1,0 +1,49 @@
+{{- $storageName := include "file-api.fullname" . -}}
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ $storageName }}-storage
+  labels:
+    {{- include "file-api.labels" . | nindent 4 }}
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $storageName }}
+  labels:
+    {{- include "file-api.labels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: 100Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: {{ $storageName }}-storage
+  local:
+    path: {{ .Values.env.assetsPath }}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $storageName }}
+  labels:
+    {{- include "file-api.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ $storageName }}-storage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi

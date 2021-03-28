@@ -1,7 +1,9 @@
+{{- $fullname := include "file-api.fullname" . -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "file-api.fullname" . }}
+  name: {{ $fullname }}
   labels:
     {{- include "file-api.labels" . | nindent 4 }}
 spec:
@@ -59,7 +61,7 @@ spec:
               value: {{ .Values.service.grpcPort | quote }}
           envFrom:
           - configMapRef:
-              name: {{ include "file-api.fullname" . }}-config     
+              name: {{ $fullname }}-config     
           {{- with .Values.probes.liveness  }}
           livenessProbe:
             httpGet: 
@@ -84,9 +86,8 @@ spec:
               mountPath: {{ .Values.env.assetsPath }}
       volumes:
         - name: filesrc
-          hostPath: 
-            path: {{ required "env.hostPath is required!" .Values.env.hostPath }}
-            type: DirectoryOrCreate 
+          persistentVolumeClaim:
+            claimName: {{ $fullname }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
